@@ -129,28 +129,33 @@
             }
         }
 
+        // function goToDashboard() {
+        //     var idToken = localStorage.getItem('idToken');
+        //     if (idToken) {
+        //         console.log('retrieved token.')
+        //         console.log('ID Token for dashboard:', idToken);
+        //         fetch('/dashboard', {
+        //             method: 'GET',
+        //             headers: {
+        //                 'Authorization': 'Bearer ' + idToken
+        //             }
+        //         }).then(response => {
+        //             if (!response.ok) {
+        //                 throw new Error('Network response was not ok ' + response.statusText);
+        //             }
+        //             return response.text();
+        //         }).then(html => {
+        //             document.write(html);
+        //         }).catch(error => {
+        //             console.error('There has been a problem with your fetch operation:', error);
+        //         });
+        //     } else {
+        //         alert('User not authenticated. Please log in first.');
+        //     }
+        // }
+
         function goToDashboard() {
-            var idToken = localStorage.getItem('idToken'); // Retrieve the saved ID token
-            if (idToken) {
-                console.log('ID Token for dashboard:', idToken); // Log the token for debugging
-                fetch('/dashboard', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + idToken
-                    }
-                }).then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-                    return response.text();
-                }).then(html => {
-                    document.write(html); // Display the dashboard page
-                }).catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
-            } else {
-                alert('User not authenticated. Please log in first.');
-            }
+            window.location.href = "/dashboard";
         }
     </script>
 </head>

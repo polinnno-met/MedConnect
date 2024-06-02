@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -32,6 +31,8 @@ public class DashboardController {
         dashboardData.put("appointments", getAppointments(role, uid));
         dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
         dashboardData.put("billing", getBilling(role, uid));
+
+        System.out.println("Dashboard Data: " + dashboardData);
 
         return dashboardData;
     }

@@ -9,19 +9,21 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script>
         // Ensure this block is not duplicated
-        // const firebaseConfig = {
-        //     apiKey: "AIzaSyCnOzzlp4v7_arUneoK3ZPxx4n-oJ7FnJ4",
-        //     authDomain: "cs450-5859.firebaseapp.com",
-        //     projectId: "cs450-5859",
-        //     storageBucket: "cs450-5859.appspot.com",
-        //     messagingSenderId: "151931224823",
-        //     appId: "1:151931224823:web:9efe844600eb230d1e49f2",
-        //     measurementId: "G-M5E63DF98M"
-        // };
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnOzzlp4v7_arUneoK3ZPxx4n-oJ7FnJ4",
+            authDomain: "cs450-5859.firebaseapp.com",
+            projectId: "cs450-5859",
+            storageBucket: "cs450-5859.appspot.com",
+            messagingSenderId: "151931224823",
+            appId: "1:151931224823:web:9efe844600eb230d1e49f2",
+            measurementId: "G-M5E63DF98M"
+        };
 
         // Initialize Firebase only if not already initialized
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // use the already initialized instance
         }
     </script>
 </head>
@@ -50,43 +52,77 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        var user = firebase.auth().currentUser;
-        if (user) {
-            user.getIdToken().then((idToken) => {
-                fetch('/api/dashboard', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + idToken
-                    }
-                }).then(response => response.json())
-                    .then(data => {
-                        displayData(data);
-                    }).catch(error => {
-                    console.error('Error fetching dashboard data:', error);
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                console.log("User is authenticated:", user);
+                user.getIdToken().then((idToken) => {
+                    console.log("ID Token:", idToken); // Debug log for ID token
+                    fetchDashboardData(idToken);
                 });
-            });
-        } else {
-            alert('User not authenticated. Please log in first.');
-        }
+            } else {
+                console.log('User not authenticated');
+                alert('User not authenticated. Please log in first.');
+                window.location.href = "/";
+            }
+        });
     });
 
-    function displayData(data) {
-        displaySection('patientsContent', data.patients);
-        displaySection('appointmentsContent', data.appointments);
-        displaySection('medicalRecordsContent', data.medicalRecords);
-        displaySection('billingContent', data.billing);
+    function fetchDashboardData(idToken) {
+        fetch('/api/dashboard', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + idToken
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            console.log("Data fetched:", data);
+            displayData(data);
+        }).catch(error => {
+            console.error('Error fetching dashboard data:', error);
+        });
     }
 
-    function displaySection(sectionId, items) {
+    function displayData(data) {
+        displaySection('patientsContent', data.patients, ['patient_id', 'first_name', 'last_name', 'email']);
+        displaySection('appointmentsContent', data.appointments, ['appointment_id', 'doctor_id', 'patient_id', 'reason']);
+        displaySection('medicalRecordsContent', data.medicalRecords, ['record_id', 'doctor_id', 'patient_id', 'diagnosis']);
+        displaySection('billingContent', data.billing, ['bill_id', 'appointment_id', 'amount', 'status']);
+    }
+
+    function displaySection(sectionId, items, keys) {
         const section = document.getElementById(sectionId);
         section.innerHTML = '';
-        const slice = items.slice(0, 6);
-        slice.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'item';
-            div.textContent = JSON.stringify(item);
-            section.appendChild(div);
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        // Create table headers
+        const headerRow = document.createElement('tr');
+        keys.forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key.replace('_', ' ').toUpperCase();
+            headerRow.appendChild(th);
         });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create table rows
+        items.forEach(item => {
+            const row = document.createElement('tr');
+            keys.forEach(key => {
+                const td = document.createElement('td');
+                td.textContent = item[key];
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        section.appendChild(table);
     }
 </script>
 </body>
