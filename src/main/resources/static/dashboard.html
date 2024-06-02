@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<h1>Dashboard</h1>
+<p>Welcome, <span id="role"></span>!</p>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let role = localStorage.getItem('userRole');
+        document.getElementById('role').textContent = role ? role : 'Unknown';
+    });
+</script>
+</html>
