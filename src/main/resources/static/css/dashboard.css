@@ -1,0 +1,27 @@
+body {
+    background-color: lightpink;
+}
+
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 30%;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.see-more {
+    text-align: right;
+}
+
+

@@ -1,16 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script>
+        // Ensure this block is not duplicated
+        // const firebaseConfig = {
+        //     apiKey: "AIzaSyCnOzzlp4v7_arUneoK3ZPxx4n-oJ7FnJ4",
+        //     authDomain: "cs450-5859.firebaseapp.com",
+        //     projectId: "cs450-5859",
+        //     storageBucket: "cs450-5859.appspot.com",
+        //     messagingSenderId: "151931224823",
+        //     appId: "1:151931224823:web:9efe844600eb230d1e49f2",
+        //     measurementId: "G-M5E63DF98M"
+        // };
+
+        // Initialize Firebase only if not already initialized
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
 </head>
 <body>
-<h1>Dashboard</h1>
-<p>Welcome, <span id="role"></span>!</p>
-</body>
+<div id="dashboard">
+    <div class="card" id="patientsCard">
+        <h2>Patients</h2>
+        <div class="card-content" id="patientsContent"></div>
+        <a href="#" id="patientsSeeMore">See More</a>
+    </div>
+    <div class="card" id="appointmentsCard">
+        <h2>Appointments</h2>
+        <div class="card-content" id="appointmentsContent"></div>
+        <a href="#" id="appointmentsSeeMore">See More</a>
+    </div>
+    <div class="card" id="medicalRecordsCard">
+        <h2>Medical Records</h2>
+        <div class="card-content" id="medicalRecordsContent"></div>
+        <a href="#" id="medicalRecordsSeeMore">See More</a>
+    </div>
+    <div class="card" id="billingCard">
+        <h2>Billing</h2>
+        <div class="card-content" id="billingContent"></div>
+        <a href="#" id="billingSeeMore">See More</a>
+    </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        let role = localStorage.getItem('userRole');
-        document.getElementById('role').textContent = role ? role : 'Unknown';
+        var user = firebase.auth().currentUser;
+        if (user) {
+            user.getIdToken().then((idToken) => {
+                fetch('/api/dashboard', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + idToken
+                    }
+                }).then(response => response.json())
+                    .then(data => {
+                        displayData(data);
+                    }).catch(error => {
+                    console.error('Error fetching dashboard data:', error);
+                });
+            });
+        } else {
+            alert('User not authenticated. Please log in first.');
+        }
     });
+
+    function displayData(data) {
+        displaySection('patientsContent', data.patients);
+        displaySection('appointmentsContent', data.appointments);
+        displaySection('medicalRecordsContent', data.medicalRecords);
+        displaySection('billingContent', data.billing);
+    }
+
+    function displaySection(sectionId, items) {
+        const section = document.getElementById(sectionId);
+        section.innerHTML = '';
+        const slice = items.slice(0, 6);
+        slice.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.textContent = JSON.stringify(item);
+            section.appendChild(div);
+        });
+    }
 </script>
+</body>
 </html>

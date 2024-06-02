@@ -92,33 +92,33 @@ public class UserController {
         }
         return ResponseEntity.ok(patients);
     }
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getDashboard(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
-        String uid = decodedToken.getUid();
-        String email = decodedToken.getEmail();
-        System.out.println("Dashboard Token UID: " + uid);
-        System.out.println("Dashboard Token Email: " + email);
-
-        // Check if the user is in the Staff table
-        try (Connection connection = dataSource.getConnection()) {
-            String query = "SELECT role FROM Staff WHERE email = ?";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, email);
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        String role = resultSet.getString("role");
-                        System.out.println("User Role for Dashboard: " + role);
-                        return ResponseEntity.ok("<h1>Dashboard</h1><p>Welcome, " + role + "</p>");
-                    } else {
-                        return ResponseEntity.status(403).body("User not found in staff database");
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Database error");
-        }
-    }
+//
+//    @GetMapping("/dashboard")
+//    public ResponseEntity<String> getDashboard(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
+//        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
+//        String uid = decodedToken.getUid();
+//        String email = decodedToken.getEmail();
+//        System.out.println("Dashboard Token UID: " + uid);
+//        System.out.println("Dashboard Token Email: " + email);
+//
+//        // Check if the user is in the Staff table
+//        try (Connection connection = dataSource.getConnection()) {
+//            String query = "SELECT role FROM Staff WHERE email = ?";
+//            try (PreparedStatement statement = connection.prepareStatement(query)) {
+//                statement.setString(1, email);
+//                try (ResultSet resultSet = statement.executeQuery()) {
+//                    if (resultSet.next()) {
+//                        String role = resultSet.getString("role");
+//                        System.out.println("User Role for Dashboard: " + role);
+//                        return ResponseEntity.ok("<h1>Dashboard</h1><p>Welcome, " + role + "</p>");
+//                    } else {
+//                        return ResponseEntity.status(403).body("User not found in staff database");
+//                    }
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body("Database error");
+//        }
+//    }
 }
