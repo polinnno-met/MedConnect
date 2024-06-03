@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
@@ -28,28 +29,55 @@
     </script>
 </head>
 <body>
-<div id="dashboard">
-    <div class="card" id="patientsCard">
-        <h2>Patients</h2>
-        <div class="card-content" id="patientsContent"></div>
-        <a href="#" id="patientsSeeMore">See More</a>
-    </div>
-    <div class="card" id="appointmentsCard">
-        <h2>Appointments</h2>
-        <div class="card-content" id="appointmentsContent"></div>
-        <a href="#" id="appointmentsSeeMore">See More</a>
-    </div>
-    <div class="card" id="medicalRecordsCard">
-        <h2>Medical Records</h2>
-        <div class="card-content" id="medicalRecordsContent"></div>
-        <a href="#" id="medicalRecordsSeeMore">See More</a>
-    </div>
-    <div class="card" id="billingCard">
-        <h2>Billing</h2>
-        <div class="card-content" id="billingContent"></div>
-        <a href="#" id="billingSeeMore">See More</a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Patients</h2>
+                    <div class="card-content-wrapper">
+                        <div class="card-content" id="patientsContent"></div>
+                    </div>
+                    <a href="#" id="patientsSeeMore" class="btn btn-primary mt-3">See More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Appointments</h2>
+                    <div class="card-content-wrapper">
+                        <div class="card-content" id="appointmentsContent"></div>
+                    </div>
+                    <a href="#" id="appointmentsSeeMore" class="btn btn-primary mt-3">See More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Medical Records</h2>
+                    <div class="card-content-wrapper">
+                        <div class="card-content" id="medicalRecordsContent"></div>
+                    </div>
+                    <a href="#" id="medicalRecordsSeeMore" class="btn btn-primary mt-3">See More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Billing</h2>
+                    <div class="card-content-wrapper">
+                        <div class="card-content" id="billingContent"></div>
+                    </div>
+                    <a href="#" id="billingSeeMore" class="btn btn-primary mt-3">See More</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
         firebase.auth().onAuthStateChanged(user => {
@@ -97,6 +125,7 @@
         const section = document.getElementById(sectionId);
         section.innerHTML = '';
         const table = document.createElement('table');
+        table.classList.add('table', 'table-bordered', 'table-hover', 'table-sm');
         const thead = document.createElement('thead');
         const tbody = document.createElement('tbody');
 

@@ -1,80 +1,108 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1b1b3a;
-    color: #fff;
+    background-color: #f3f4f6; /* Light background color */
+    color: #333; /* Dark text color */
     margin: 0;
     padding: 20px;
 }
 
-#dashboard {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
 .card {
-    background-color: #2d2d6a;
+    background-color: #fff; /* White card background */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: max-content;
 }
 
-.card h2 {
+.card-title {
     font-size: 1.2em;
     margin-top: 0;
-    color: #fff;
+    color: #333; /* Dark title color */
     text-transform: uppercase;
 }
 
+.card-content-wrapper {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
 .card-content {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-bottom: 20px;
+    width: max-content;
 }
 
 .card-content table {
     width: 100%;
     border-collapse: collapse;
-    color: #fff;
+    color: #333; /* Dark text color */
+    font-size: 14px; /* Adjust font size */
 }
 
 .card-content table th, .card-content table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: none; /* Remove default borders */
+    padding: 12px 8px; /* Adjust padding */
     text-align: left;
+    position: relative;
 }
 
 .card-content table th {
-    background-color: #1f1f4a;
-    color: #fff;
+    background-color: #f7f8fa; /* Light background for headers */
+    color: #555; /* Slightly darker text for headers */
+    font-weight: bold;
+    border-bottom: 2px solid #e0e0e0; /* Bottom border for headers */
 }
 
-.card-content table tr:nth-child(even) {
-    background-color: #3a3a8a;
+.card-content table td {
+    background-color: #fff; /* White background for rows */
+}
+
+.card-content table tr {
+    border-bottom: 1px solid #e0e0e0; /* Border between rows */
+}
+
+.card-content table td::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background-color: #e0e0e0; /* Light gray for vertical separators */
 }
 
 .card a {
     text-decoration: none;
-    color: #007BFF;
+    color: #007bff; /* Blue color for links */
     font-weight: bold;
     display: block;
     text-align: center;
     margin-top: 10px;
 }
 
-.card-content .item {
-    margin-bottom: 10px;
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
 }
 
-.card-content .item:last-child {
-    margin-bottom: 0;
+.container-fluid {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.card-large {
-    grid-column: span 2;
+.row {
+    display: flex;
+    flex-wrap: wrap;
 }
 
-.card-feedback {
-    grid-column: span 3;
+.col-auto {
+    padding: 10px;
+}
+
+.mb-3 {
+    margin-bottom: 16px;
 }
