@@ -115,13 +115,46 @@
     }
 
     function displayData(data) {
-        displaySection('patientsContent', data.patients, ['patient_id', 'first_name', 'last_name', 'email']);
-        displaySection('appointmentsContent', data.appointments, ['appointment_id', 'doctor_id', 'patient_id', 'reason']);
-        displaySection('medicalRecordsContent', data.medicalRecords, ['record_id', 'doctor_id', 'patient_id', 'diagnosis']);
-        displaySection('billingContent', data.billing, ['bill_id', 'appointment_id', 'amount', 'status']);
+        console.log("Patients Data:", data.patients);
+        console.log("Appointments Data:", data.appointments);
+        console.log("Medical Records Data:", data.medicalRecords);
+        console.log("Billing Data:", data.billing);
+
+        displaySection('patientsContent', data.patients.map(p => ({
+            id: p.patient_id,
+            name: `${p.patient_first_name} ${p.patient_last_name}`,
+            email: p.patient_email
+        })), ['id', 'name', 'email']);
+
+        displaySection('appointmentsContent', data.appointments.map(a => ({
+            id: a.appointment_id,
+            time: new Date(a.appointment_date).toLocaleString(),
+            status: a.appointment_status,
+            doctor: `${a.staff_first_name} ${a.staff_last_name}`,
+            patient: `${a.patient_first_name} ${a.patient_last_name}`,
+            patient_id: a.patient_id
+        })), ['id', 'time', 'status', 'doctor', 'patient'], 'patient_name', '/patients/');
+
+        displaySection('medicalRecordsContent', data.medicalRecords.map(mr => ({
+            id: mr.record_id,
+            time: new Date(mr.appointment_date).toLocaleString(),
+            doctor: `${mr.staff_first_name} ${mr.staff_last_name}`,
+            patient: `${mr.patient_first_name} ${mr.patient_last_name}`,
+            patient_id: mr.patient_id,
+            diagnosis: mr.record_diagnosis
+        })), ['id', 'time', 'doctor', 'patient', 'diagnosis'], 'patient_name', '/patients/');
+
+        displaySection('billingContent', data.billing.map(b => ({
+            id: b.bill_id,
+            time: new Date(b.appointment_date).toLocaleString(),
+            patient: `${b.patient_first_name} ${b.patient_last_name}`,
+            patient_id: b.patient_id,
+            amount: b.bill_amount,
+            status: b.bill_status
+        })), ['id', 'time', 'patient', 'amount', 'status'], 'patient_name', '/patients/');
     }
 
-    function displaySection(sectionId, items, keys) {
+    function displaySection(sectionId, items, keys, linkField, linkUrlPrefix) {
         const section = document.getElementById(sectionId);
         section.innerHTML = '';
         const table = document.createElement('table');
@@ -144,7 +177,15 @@
             const row = document.createElement('tr');
             keys.forEach(key => {
                 const td = document.createElement('td');
-                td.textContent = item[key];
+                if (key === linkField) {
+                    const link = document.createElement('a');
+                    link.href = `${linkUrlPrefix}${item.patient_id}`;
+                    link.textContent = item[key];
+                    link.classList.add("details-link");
+                    td.appendChild(link);
+                } else {
+                    td.textContent = item[key];
+                }
                 row.appendChild(td);
             });
             tbody.appendChild(row);
@@ -153,6 +194,7 @@
         table.appendChild(tbody);
         section.appendChild(table);
     }
+
 </script>
 </body>
 </html>

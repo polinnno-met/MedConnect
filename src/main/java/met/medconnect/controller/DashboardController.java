@@ -52,28 +52,39 @@ public class DashboardController {
     }
 
     private List<Map<String, Object>> getAppointments(String role, String uid) throws SQLException {
-        String query = "SELECT * FROM Appointments ORDER BY appointment_date DESC";
-        if (role.equals("Doctor")) {
-            query = "SELECT * FROM Appointments WHERE doctor_id = ? ORDER BY appointment_date DESC";
-        }
-        return executeQuery(query, role.equals("Doctor") ? Collections.singletonList(uid) : Collections.emptyList());
+        String query = "SELECT a.appointment_id, a.appointment_date, a.appointment_status, " +
+                "p.patient_first_name, p.patient_last_name, p.patient_id, " +
+                "s.staff_first_name, s.staff_last_name " +
+                "FROM Appointments a " +
+                "JOIN Patients p ON a.appointment_patient_id = p.patient_id " +
+                "JOIN Staff s ON a.appointment_doctor_id = s.staff_id " +
+                "ORDER BY appointment_date DESC";
+        return executeQuery(query, Collections.emptyList());
     }
 
     private List<Map<String, Object>> getMedicalRecords(String role, String uid) throws SQLException {
-        String query = "SELECT * FROM MedicalRecords ORDER BY appointment_id DESC";
-        if (role.equals("Doctor")) {
-            query = "SELECT * FROM MedicalRecords WHERE doctor_id = ? ORDER BY appointment_id DESC";
-        }
-        return executeQuery(query, role.equals("Doctor") ? Collections.singletonList(uid) : Collections.emptyList());
+        String query = "SELECT m.record_id, m.record_diagnosis, a.appointment_date, " +
+                "p.patient_first_name, p.patient_last_name, p.patient_id, " +
+                "s.staff_first_name, s.staff_last_name " +
+                "FROM MedicalRecords m " +
+                "JOIN Patients p ON m.record_patient_id = p.patient_id " +
+                "JOIN Staff s ON m.record_doctor_id = s.staff_id " +
+                "JOIN Appointments a ON m.record_appointment_id = a.appointment_id " +
+                "ORDER BY m.record_appointment_id DESC";
+        return executeQuery(query, Collections.emptyList());
     }
 
     private List<Map<String, Object>> getBilling(String role, String uid) throws SQLException {
-        String query = "SELECT * FROM Billing ORDER BY billing_date DESC";
-        if (role.equals("Doctor")) {
-            query = "SELECT b.* FROM Billing b JOIN Appointments a ON b.appointment_id = a.appointment_id WHERE a.doctor_id = ? ORDER BY b.billing_date DESC";
-        }
-        return executeQuery(query, role.equals("Doctor") ? Collections.singletonList(uid) : Collections.emptyList());
+        String query = "SELECT b.bill_id, b.bill_amount, b.bill_status, " +
+                "a.appointment_date, " +
+                "p.patient_first_name, p.patient_last_name, p.patient_id " +
+                "FROM Billing b " +
+                "JOIN Appointments a ON b.bill_appointment_id = a.appointment_id " +
+                "JOIN Patients p ON a.appointment_patient_id = p.patient_id " +
+                "ORDER BY bill_date DESC";
+        return executeQuery(query, Collections.emptyList());
     }
+
 
     private List<Map<String, Object>> executeQuery(String query, List<Object> params) throws SQLException {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -88,6 +99,7 @@ public class DashboardController {
                     for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
                         row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
                     }
+                    System.out.println(row);
                     results.add(row);
                 }
             }

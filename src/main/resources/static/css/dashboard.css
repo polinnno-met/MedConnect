@@ -1,27 +1,24 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f3f4f6; /* Light background color */
-    color: #333; /* Dark text color */
+    background-color: #f3f4f6;
+    color: #333;
     margin: 0;
-    padding: 20px;
 }
 
 .card {
-    background-color: #fff; /* White card background */
+    background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 20px;
+    padding: 5px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
     width: max-content;
 }
 
 .card-title {
     font-size: 1.2em;
     margin-top: 0;
-    color: #333; /* Dark title color */
+    color: #333;
     text-transform: uppercase;
 }
 
@@ -38,30 +35,30 @@ body {
 .card-content table {
     width: 100%;
     border-collapse: collapse;
-    color: #333; /* Dark text color */
-    font-size: 14px; /* Adjust font size */
+    color: #333;
+    font-size: 12px;
 }
 
 .card-content table th, .card-content table td {
-    border: none; /* Remove default borders */
-    padding: 12px 8px; /* Adjust padding */
+    border: none;
+    padding: 8px 4px;
     text-align: left;
     position: relative;
 }
 
 .card-content table th {
-    background-color: #f7f8fa; /* Light background for headers */
-    color: #555; /* Slightly darker text for headers */
+    background-color: #f7f8fa;
+    color: #555;
     font-weight: bold;
-    border-bottom: 2px solid #e0e0e0; /* Bottom border for headers */
+    border-bottom: 2px solid #e0e0e0;
 }
 
 .card-content table td {
-    background-color: #fff; /* White background for rows */
+    background-color: #fff;
 }
 
 .card-content table tr {
-    border-bottom: 1px solid #e0e0e0; /* Border between rows */
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .card-content table td::before {
@@ -72,22 +69,34 @@ body {
     transform: translateY(-50%);
     height: 60%;
     width: 1px;
-    background-color: #e0e0e0; /* Light gray for vertical separators */
+    background-color: #e0e0e0;
 }
 
 .card a {
-    text-decoration: none;
-    color: #007bff; /* Blue color for links */
-    font-weight: bold;
     display: block;
     text-align: center;
-    margin-top: 10px;
+}
+
+.card a:hover {
+    text-decoration: underline;
 }
 
 .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
 }
+
+.details-link {
+    /*font-weight: bold;*/
+    /*color: #c7c6c6;*/
+    text-decoration: underline;
+    color: black;
+}
+
+.details-link:hover {
+    font-weight: bold;
+}
+
 
 .container-fluid {
     max-width: 1200px;
