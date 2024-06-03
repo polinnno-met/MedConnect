@@ -32,6 +32,14 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-auto mb-3">
+            <div class="card" id="userCard">
+                <div class="card-body">
+                    <h2 class="card-title">User Info</h2>
+                    <div id="userInfo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto mb-3">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">Patients</h2>
@@ -85,6 +93,7 @@
                 console.log("User is authenticated:", user);
                 user.getIdToken().then((idToken) => {
                     console.log("ID Token:", idToken); // Debug log for ID token
+                    // fetchUserInfo(idToken, user.uid);
                     fetchDashboardData(idToken);
                 });
             } else {
@@ -119,6 +128,8 @@
         console.log("Appointments Data:", data.appointments);
         console.log("Medical Records Data:", data.medicalRecords);
         console.log("Billing Data:", data.billing);
+        console.log("User Info:", data.userInfo);
+
 
         displaySection('patientsContent', data.patients.map(p => ({
             id: p.patient_id,
@@ -152,6 +163,9 @@
             amount: b.bill_amount,
             status: b.bill_status
         })), ['id', 'time', 'patient', 'amount', 'status'], 'patient_name', '/patients/');
+
+        displayUserInfo(data.userInfo);
+
     }
 
     function displaySection(sectionId, items, keys, linkField, linkUrlPrefix) {
@@ -195,6 +209,15 @@
         section.appendChild(table);
     }
 
+
+    function displayUserInfo(userInfo) {
+        const userInfoDiv = document.getElementById('userInfo');
+        userInfoDiv.innerHTML = `
+        <div class="user-info"><strong>Welcome:</strong> ${userInfo.firstName} ${userInfo.lastName}</div>
+        <div class="user-info"><strong>Role:</strong> ${userInfo.role}</div>
+        <div class="user-info"><strong>Email:</strong> ${userInfo.email}</div>
+    `;
+    }
 </script>
 </body>
 </html>
