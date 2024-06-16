@@ -33,6 +33,9 @@ public class DashboardController {
 
         String role = getUserRoleByUid(uid); // Implement this method to get user role from your database
 
+        System.out.println("Dashboard user: " + uid);
+
+
         Map<String, Object> dashboardData = new HashMap<>();
         dashboardData.put("patients", getPatients(role, uid));
         dashboardData.put("appointments", getAppointments(role, uid));

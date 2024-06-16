@@ -38,12 +38,12 @@ public class UserController {
 
             // Check user role from the Staff table
             try (Connection connection = dataSource.getConnection()) {
-                String query = "SELECT role FROM Staff WHERE email = ?";
+                String query = "SELECT staff_role FROM Staff WHERE staff_email = ?";
                 try (PreparedStatement statement = connection.prepareStatement(query)) {
                     statement.setString(1, email);
                     try (ResultSet resultSet = statement.executeQuery()) {
                         if (resultSet.next()) {
-                            String role = resultSet.getString("role");
+                            String role = resultSet.getString("staff_role");
                             System.out.println("User Role: " + role);
                             Map<String, String> response = new HashMap<>();
                             response.put("uid", uid);
