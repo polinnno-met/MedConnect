@@ -74,6 +74,7 @@ public class DashboardController {
         return executeQuery(query, Collections.emptyList());
     }
 
+
     private List<Map<String, Object>> getMedicalRecords(String role, String uid) throws SQLException {
         String query = "SELECT m.record_id, m.record_diagnosis, a.appointment_date, " +
                 "p.patient_first_name, p.patient_last_name, p.patient_id, " +
