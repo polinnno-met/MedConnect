@@ -3,12 +3,16 @@ package met.medconnect.controller;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,8 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-@RestController
-@RequestMapping("/api/dashboard")
+@Controller
+@RequestMapping("/dashboard")
 public class DashboardController {
 
     @Autowired
@@ -27,31 +31,78 @@ public class DashboardController {
 
 
     @GetMapping
-    public Map<String, Object> getDashboardData(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
-        String uid = decodedToken.getUid();
+    public ModelAndView getDashboard(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
+        ModelAndView modelAndView = new ModelAndView("dashboard");
 
-        String role = getUserRoleByUid(uid); // Implement this method to get user role from your database
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
+            String uid = decodedToken.getUid();
 
-        System.out.println("Dashboard user: " + uid);
+            String role = getUserRoleByUid(uid);
 
+            System.out.println("Dashboard user: " + uid);
 
-        Map<String, Object> dashboardData = new HashMap<>();
-        dashboardData.put("patients", getPatients(role, uid));
-        dashboardData.put("appointments", getAppointments(role, uid));
-        dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
-        dashboardData.put("billing", getBilling(role, uid));
-        dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
+            Map<String, Object> dashboardData = new HashMap<>();
+            dashboardData.put("patients", getPatients(role, uid));
+            dashboardData.put("appointments", getAppointments(role, uid));
+            dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
+            dashboardData.put("billing", getBilling(role, uid));
+            dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
 
+            System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
 
-        System.out.println("Dashboard Data: " + dashboardData);
-
-        return dashboardData;
+            modelAndView.addObject("dashboardData", dashboardData);
+            return modelAndView;
+        } catch (FirebaseAuthException e) {
+            modelAndView.setViewName("error/401");
+            modelAndView.addObject("error", "Invalid token");
+            return modelAndView;
+        } catch (SQLException e) {
+            modelAndView.setViewName("error/500");
+            modelAndView.addObject("error", "Database error");
+            return modelAndView;
+        }
     }
 
+
+//
+//    @GetMapping
+//    public ResponseEntity<Map<String, Object>> getDashboardData(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
+//        try {
+//        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
+//        String uid = decodedToken.getUid();
+//
+//        String role = getUserRoleByUid(uid); // Implement this method to get user role from your database
+//
+//        System.out.println("Dashboard user: " + uid);
+//
+//
+//        Map<String, Object> dashboardData = new HashMap<>();
+//        dashboardData.put("patients", getPatients(role, uid));
+//        dashboardData.put("appointments", getAppointments(role, uid));
+//        dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
+//        dashboardData.put("billing", getBilling(role, uid));
+//        dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
+//
+//
+//        System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
+//
+//        return ResponseEntity.ok(dashboardData);
+//        } catch (FirebaseAuthException e) {
+//            Map<String, Object> errorResponse = new HashMap<>();
+//            errorResponse.put("error", "Invalid token");
+//            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(errorResponse);
+//
+//        } catch (SQLException e) {
+//            Map<String, Object> errorResponse = new HashMap<>();
+//            errorResponse.put("error", "Database error");
+//            return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(errorResponse);
+//        }
+//    }
+
     private String getUserRoleByUid(String uid) throws SQLException {
-        // Implement logic to get the user role by UID from the Staff table
-        String role = "Administrator"; // Placeholder for the actual implementation
+        // TODO: Implement logic
+        String role = "Administrator";
         return role;
     }
 

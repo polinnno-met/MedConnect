@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
 
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
@@ -154,9 +154,36 @@
         //     }
         // }
 
+        //
+        // function goToDashboard() {
+        //     window.location.href = "/dashboard";
+        // }
+
 
         function goToDashboard() {
-            window.location.href = "/dashboard";
+            var idToken = localStorage.getItem('idToken');
+            if (idToken) {
+                fetch('/dashboard', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + idToken
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.text();
+                }).then(html => {
+                    document.write(html);
+                }).catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                    alert('Failed to fetch dashboard data');
+                    // Optionally, redirect to a 404 or error page
+                    window.location.href = "/404";
+                });
+            } else {
+                alert('User not authenticated. Please log in first.');
+            }
         }
     </script>
 </head>
