@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/feather-icons"></link>
+
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script>
@@ -37,6 +41,44 @@
     </script>
 </head>
 <body>
+
+<div class="sidebar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="home" class="icon"></i>
+                <span class="nav-link-text">Home</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="users" class="icon"></i>
+                <span class="nav-link-text">Patients</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="calendar" class="icon"></i>
+                <span class="nav-link-text">Appointments</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="file-text" class="icon"></i>
+                <span class="nav-link-text">Medical Records</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="dollar-sign" class="icon"></i>
+                <span class="nav-link-text">Billing</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <!-- Your main content goes here -->
+    <h1>Dashboard</h1>
 <div class="container-fluid">
     <div class="row">
         <div class="col-auto mb-3">
@@ -177,5 +219,13 @@
         </div>
     </div>
 </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+    feather.replace();
+</script>
 </body>
 </html>

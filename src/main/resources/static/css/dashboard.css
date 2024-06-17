@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f3f4f6;
+    background-color: #d2d9e8;
     color: #333;
     margin: 0;
 }
@@ -118,4 +118,49 @@ body {
 
 #userInfo {
     height: 10vw;
+}
+
+body {
+    display: flex;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 80px;
+    background: #343a40;
+    transition: width 0.3s;
+    overflow-x: hidden;
+    z-index: 1000;
+}
+.sidebar:hover {
+    width: 250px;
+}
+.sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar .nav-item .icon {
+    margin-right: 10px;
+}
+.sidebar .nav-item:hover {
+    background: #495057;
+}
+.sidebar .nav-link-text {
+    display: none;
+}
+.sidebar:hover .nav-link-text {
+    display: inline;
+}
+.content {
+    margin-left: 80px;
+    padding: 20px;
+}
+.sidebar:hover ~ .content {
+    /*margin-left: 250px;*/
 }
