@@ -49,6 +49,9 @@ public class DashboardController {
             dashboardData.put("billing", getBilling(role, uid));
             dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
 
+            Map<String, Integer> appointmentStatusCounts = getAppointmentStatusCounts(role, uid);
+            dashboardData.put("appointmentStatusCounts", appointmentStatusCounts);
+
             System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
 
             modelAndView.addObject("dashboardData", dashboardData);
@@ -64,6 +67,33 @@ public class DashboardController {
         }
     }
 
+    private Map<String, Integer> getAppointmentStatusCounts(String role, String uid) throws SQLException {
+        String query = "SELECT appointment_status, COUNT(*) as count FROM Appointments WHERE appointment_date >= CURDATE() AND appointment_date < CURDATE() + INTERVAL 1 DAY";
+        if (role.equals("Doctor")) {
+            query += " AND appointment_doctor_id = ? GROUP BY appointment_status";
+        } else {
+            query += " GROUP BY appointment_status";
+        }
+
+        Map<String, Integer> counts = new HashMap<>();
+        counts.put("scheduled", 0);
+        counts.put("completed", 0);
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            if (role.equals("Doctor")) {
+                statement.setString(1, uid);
+            }
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String status = resultSet.getString("appointment_status").toLowerCase();
+                    int count = resultSet.getInt("count");
+                    counts.put(status, count);
+                }
+            }
+        }
+        return counts;
+    }
 
 //
 //    @GetMapping

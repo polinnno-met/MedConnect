@@ -6,10 +6,8 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/feather-icons"></link>
-
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script>
@@ -76,156 +74,197 @@
         </li>
     </ul>
 </div>
-<div class="content">
-    <!-- Your main content goes here -->
+
+<div class="main-content">
+    <header class="header">
+        <div class="header-container">
+            <span class="header-title">MedConnect</span>
+            <div class="header-right">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-envelope"></i>
+                <div class="header-user">
+                    <img src="https://via.placeholder.com/40" alt="User Image" class="user-image">
+                    <span>Charles Hall</span>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="content">    <!-- Your main content goes here -->
     <h1>Dashboard</h1>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-auto mb-3">
-            <div class="card" id="userCard">
-                <div class="card-body">
-                    <h2 class="card-title">User Info</h2>
-                    <div th:if="${dashboardData.userInfo}">
-                        <div class="user-info"><strong>Welcome:</strong> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
-                        <div class="user-info"><strong>Role:</strong> <span th:text="${dashboardData.userInfo.role}"></span></div>
-                        <div class="user-info"><strong>Email:</strong> <span th:text="${dashboardData.userInfo.email}"></span></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-auto mb-3">
+                <div class="card" id="userCard">
+                    <div class="card-body">
+                        <h2 class="card-title">User Info</h2>
+                        <div th:if="${dashboardData.userInfo}">
+                            <div class="user-info"><strong>Welcome:</strong> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
+                            <div class="user-info"><strong>Role:</strong> <span th:text="${dashboardData.userInfo.role}"></span></div>
+                            <div class="user-info"><strong>Email:</strong> <span th:text="${dashboardData.userInfo.email}"></span></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-auto mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Patients</h2>
-                    <div class="card-content-wrapper">
-                        <div class="card-content">
-                            <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.patients}">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="patient : ${dashboardData.patients}">
-                                    <td th:text="${patient.patient_id}"></td>
-                                    <td th:text="${patient.patient_first_name} + ' ' + ${patient.patient_last_name}"></td>
-                                    <td th:text="${patient.patient_email}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Patients</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.patients}">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="patient : ${dashboardData.patients}">
+                                        <td th:text="${patient.patient_id}"></td>
+                                        <td th:text="${patient.patient_first_name} + ' ' + ${patient.patient_last_name}"></td>
+                                        <td th:text="${patient.patient_email}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
-                    <a href="#" class="btn btn-primary mt-3">See More</a>
                 </div>
             </div>
-        </div>
-        <div class="col-auto mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Appointments</h2>
-                    <div class="card-content-wrapper">
-                        <div class="card-content">
-                            <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.appointments}">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Time</th>
-                                    <th>Status</th>
-                                    <th>Doctor</th>
-                                    <th>Patient</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="appointment : ${dashboardData.appointments}">
-                                    <td th:text="${appointment.appointment_id}"></td>
-                                    <td th:text="${#temporals.format(appointment.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${appointment.appointment_status}"></td>
-                                    <td th:text="${appointment.staff_first_name} + ' ' + ${appointment.staff_last_name}"></td>
-                                    <td th:text="${appointment.patient_first_name} + ' ' + ${appointment.patient_last_name}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Sample Chart</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <canvas id="myChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <a href="#" class="btn btn-primary mt-3">See More</a>
                 </div>
             </div>
-        </div>
-        <div class="col-auto mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Medical Records</h2>
-                    <div class="card-content-wrapper">
-                        <div class="card-content">
-                            <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.medicalRecords}">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Time</th>
-                                    <th>Doctor</th>
-                                    <th>Patient</th>
-                                    <th>Diagnosis</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="record : ${dashboardData.medicalRecords}">
-                                    <td th:text="${record.record_id}"></td>
-                                    <td th:text="${#temporals.format(record.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${record.staff_first_name} + ' ' + ${record.staff_last_name}"></td>
-                                    <td th:text="${record.patient_first_name} + ' ' + ${record.patient_last_name}"></td>
-                                    <td th:text="${record.record_diagnosis}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Remaining Appointments</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <input type="hidden" id="scheduledAppointments" th:value="${dashboardData.appointmentStatusCounts.scheduled}">
+                                <input type="hidden" id="completedAppointments" th:value="${dashboardData.appointmentStatusCounts.completed}">
+                                <canvas id="remainingAppointmentsChart"></canvas>
+                            </div>
                         </div>
                     </div>
-                    <a href="#" class="btn btn-primary mt-3">See More</a>
                 </div>
             </div>
-        </div>
-        <div class="col-auto mb-3">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title">Billing</h2>
-                    <div class="card-content-wrapper">
-                        <div class="card-content">
-                            <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.billing}">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Time</th>
-                                    <th>Patient</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="bill : ${dashboardData.billing}">
-                                    <td th:text="${bill.bill_id}"></td>
-                                    <td th:text="${#temporals.format(bill.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
-                                    <td th:text="${bill.patient_first_name} + ' ' + ${bill.patient_last_name}"></td>
-                                    <td th:text="${bill.bill_amount}"></td>
-                                    <td th:text="${bill.bill_status}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Appointments</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.appointments}">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                        <th>Doctor</th>
+                                        <th>Patient</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="appointment : ${dashboardData.appointments}">
+                                        <td th:text="${appointment.appointment_id}"></td>
+                                        <td th:text="${#temporals.format(appointment.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td th:text="${appointment.appointment_status}"></td>
+                                        <td th:text="${appointment.staff_first_name} + ' ' + ${appointment.staff_last_name}"></td>
+                                        <td th:text="${appointment.patient_first_name} + ' ' + ${appointment.patient_last_name}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
-                    <a href="#" class="btn btn-primary mt-3">See More</a>
+                </div>
+            </div>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Medical Records</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.medicalRecords}">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Time</th>
+                                        <th>Doctor</th>
+                                        <th>Patient</th>
+                                        <th>Diagnosis</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="record : ${dashboardData.medicalRecords}">
+                                        <td th:text="${record.record_id}"></td>
+                                        <td th:text="${#temporals.format(record.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td th:text="${record.staff_first_name} + ' ' + ${record.staff_last_name}"></td>
+                                        <td th:text="${record.patient_first_name} + ' ' + ${record.patient_last_name}"></td>
+                                        <td th:text="${record.record_diagnosis}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">See More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Billing</h2>
+                        <div class="card-content-wrapper">
+                            <div class="card-content">
+                                <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.billing}">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Time</th>
+                                        <th>Patient</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="bill : ${dashboardData.billing}">
+                                        <td th:text="${bill.bill_id}"></td>
+                                        <td th:text="${#temporals.format(bill.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
+                                        <td th:text="${bill.patient_first_name} + ' ' + ${bill.patient_last_name}"></td>
+                                        <td th:text="${bill.bill_amount}"></td>
+                                        <td th:text="${bill.bill_status}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary mt-3">See More</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-<script>
-    feather.replace();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{js/dashboard.js}"></script>
+</div>
 </body>
 </html>
