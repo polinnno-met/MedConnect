@@ -111,4 +111,21 @@ if (remainingAppointmentsCtx) {
     console.log('Remaining Appointments Canvas element not found'); // Debug log
 }
 
-    feather.replace();
+// Sidebar toggle
+document.getElementById('sidebarToggle').addEventListener('click', function() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const sidebarHeader = document.querySelector('.sidebar-header .header-title');
+
+    sidebar.classList.toggle('active');
+    mainContent.classList.toggle('sidebar-active');
+
+    if (sidebar.classList.contains('active')) {
+        sidebarHeader.textContent = 'MedConnect';
+    } else {
+        sidebarHeader.textContent = 'M';
+    }
+});
+
+
+feather.replace();

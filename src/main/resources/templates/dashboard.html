@@ -8,6 +8,19 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/feather-icons"></link>
+
+<!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
+
+<!--popups-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+
+
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script>
@@ -40,78 +53,95 @@
 </head>
 <body>
 
-<div class="sidebar">
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
-                <i data-feather="home" class="icon"></i>
-                <span class="nav-link-text">Home</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
-                <i data-feather="users" class="icon"></i>
-                <span class="nav-link-text">Patients</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
-                <i data-feather="calendar" class="icon"></i>
-                <span class="nav-link-text">Appointments</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
-                <i data-feather="file-text" class="icon"></i>
-                <span class="nav-link-text">Medical Records</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="#" class="nav-link d-flex align-items-center">
-                <i data-feather="dollar-sign" class="icon"></i>
-                <span class="nav-link-text">Billing</span>
-            </a>
-        </li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <header class="header">
-        <div class="header-container">
+<div class="d-flex w-100">
+    <nav id="sidebar" class="sidebar active pt-3">
+        <div class="sidebar-header text-center mt-3 mb-4">
             <span class="header-title">MedConnect</span>
-            <div class="header-right">
-                <i class="fas fa-bell"></i>
-                <i class="fas fa-envelope"></i>
-                <div class="header-user">
-                    <img src="https://via.placeholder.com/40" alt="User Image" class="user-image">
-                    <span>Charles Hall</span>
-                    <i class="fas fa-caret-down"></i>
-                </div>
-            </div>
         </div>
-    </header>
-    <div class="content">    <!-- Your main content goes here -->
-    <h1>Dashboard</h1>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-auto mb-3">
-                <div class="card" id="userCard">
-                    <div class="card-body">
-                        <h2 class="card-title">User Info</h2>
-                        <div th:if="${dashboardData.userInfo}">
-                            <div class="user-info"><strong>Welcome:</strong> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
-                            <div class="user-info"><strong>Role:</strong> <span th:text="${dashboardData.userInfo.role}"></span></div>
-                            <div class="user-info"><strong>Email:</strong> <span th:text="${dashboardData.userInfo.email}"></span></div>
-                        </div>
+        <ul class="nav flex-column mt-4">
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center">
+                    <i data-feather="home" class="icon"></i>
+                    <span class="nav-link-text">Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center">
+                    <i data-feather="users" class="icon"></i>
+                    <span class="nav-link-text">Patients</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center">
+                    <i data-feather="calendar" class="icon"></i>
+                    <span class="nav-link-text">Appointments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center">
+                    <i data-feather="file-text" class="icon"></i>
+                    <span class="nav-link-text">Medical Records</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link d-flex align-items-center">
+                    <i data-feather="dollar-sign" class="icon"></i>
+                    <span class="nav-link-text">Billing</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="main-content flex-grow-1 sidebar-active">
+        <header class="header d-flex justify-content-between align-items-center p-3">
+            <button class="btn btn-primary" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-right d-flex align-items-center">
+
+                <div class="dropdown">
+                    <a class="username-in-header nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+                        <img src="https://via.placeholder.com/40" alt="User Image" class="user-image rounded-circle mr-2">
+                        Charles Hall
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1 icon" data-feather="user"></i> Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="index.html"><i class="align-middle me-1 icon" data-feather="settings"></i> Settings & Privacy</a>
+                        <a class="dropdown-item" href="#"><i class="align-middle me-1 icon" data-feather="help-circle"></i> Help Center</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Log out</a>
                     </div>
                 </div>
             </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Patients</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
+        </header>
+
+
+
+        <div class="main justify-content-center">
+            <div class="cards-container container-fluid">
+                <div class="row justify-content-center">
+                <div class="col-12 col-md-6 col-lg-4 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">User Info</h5>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${dashboardData.userInfo}">
+                                <div class="user-info"><strong>Welcome:</strong> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
+                                <div class="user-info"><strong>Role:</strong> <span th:text="${dashboardData.userInfo.role}"></span></div>
+                                <div class="user-info"><strong>Email:</strong> <span th:text="${dashboardData.userInfo.email}"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Patients</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.patients}">
                                     <thead>
                                     <tr>
@@ -121,7 +151,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="patient : ${dashboardData.patients}">
+                                    <tr th:each="patient, iterStat : ${dashboardData.patients}" th:if="${iterStat.index < 5}">
                                         <td th:text="${patient.patient_id}"></td>
                                         <td th:text="${patient.patient_first_name} + ' ' + ${patient.patient_last_name}"></td>
                                         <td th:text="${patient.patient_email}"></td>
@@ -129,43 +159,43 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <a href="#" class="btn btn-primary mt-3">See More</a>
                         </div>
-                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Sample Chart</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
+                <div class="col-12 col-md-6 col-lg-4 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Sample Chart</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart">
                                 <canvas id="myChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Remaining Appointments</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
-                                <input type="hidden" id="scheduledAppointments" th:value="${dashboardData.appointmentStatusCounts.scheduled}">
-                                <input type="hidden" id="completedAppointments" th:value="${dashboardData.appointmentStatusCounts.completed}">
+                <div class="col-12 col-md-6 col-lg-3 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Remaining Appointments</h5>
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" id="scheduledAppointments" th:value="${dashboardData.appointmentStatusCounts.scheduled}">
+                            <input type="hidden" id="completedAppointments" th:value="${dashboardData.appointmentStatusCounts.completed}">
+                            <div class="chart">
                                 <canvas id="remainingAppointmentsChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Appointments</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
+                <div class="col-12 col-md-6 col-lg-5 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Appointments</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.appointments}">
                                     <thead>
                                     <tr>
@@ -177,7 +207,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="appointment : ${dashboardData.appointments}">
+                                    <tr th:each="appointment, iterStat : ${dashboardData.appointments}" th:if="${iterStat.index < 5}">
                                         <td th:text="${appointment.appointment_id}"></td>
                                         <td th:text="${#temporals.format(appointment.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
                                         <td th:text="${appointment.appointment_status}"></td>
@@ -187,17 +217,17 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <a href="#" class="btn btn-primary mt-3">See More</a>
                         </div>
-                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Medical Records</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
+                <div class="col-12 col-md-6 col-lg-4 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Medical Records</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.medicalRecords}">
                                     <thead>
                                     <tr>
@@ -209,7 +239,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="record : ${dashboardData.medicalRecords}">
+                                    <tr th:each="record, iterStat : ${dashboardData.medicalRecords}" th:if="${iterStat.index < 5}">
                                         <td th:text="${record.record_id}"></td>
                                         <td th:text="${#temporals.format(record.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
                                         <td th:text="${record.staff_first_name} + ' ' + ${record.staff_last_name}"></td>
@@ -219,17 +249,17 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <a href="#" class="btn btn-primary mt-3">See More</a>
                         </div>
-                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
                 </div>
-            </div>
-            <div class="col-auto mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Billing</h2>
-                        <div class="card-content-wrapper">
-                            <div class="card-content">
+                <div class="col-12 col-md-6 col-lg-4 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Billing</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-sm" th:if="${dashboardData.billing}">
                                     <thead>
                                     <tr>
@@ -241,7 +271,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="bill : ${dashboardData.billing}">
+                                    <tr th:each="bill, iterStat : ${dashboardData.billing}" th:if="${iterStat.index < 5}">
                                         <td th:text="${bill.bill_id}"></td>
                                         <td th:text="${#temporals.format(bill.appointment_date, 'dd/MM/yyyy HH:mm')}"></td>
                                         <td th:text="${bill.patient_first_name} + ' ' + ${bill.patient_last_name}"></td>
@@ -251,12 +281,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <a href="#" class="btn btn-primary mt-3">See More</a>
                         </div>
-                        <a href="#" class="btn btn-primary mt-3">See More</a>
                     </div>
                 </div>
             </div>
+            </div>
         </div>
+
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -265,6 +297,5 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{js/dashboard.js}"></script>
-</div>
 </body>
 </html>
