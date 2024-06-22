@@ -43,6 +43,11 @@ public class DashboardController {
             System.out.println("Dashboard user: " + uid);
 
             Map<String, Object> dashboardData = new HashMap<>();
+
+            for (Map<String, Object> patient : getPatients(role, uid)) {
+                System.out.println("next patient:");
+                System.out.println(patient.get("patient_date_of_birth").getClass().getName());
+            }
             dashboardData.put("patients", getPatients(role, uid));
             dashboardData.put("appointments", getAppointments(role, uid));
             dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
