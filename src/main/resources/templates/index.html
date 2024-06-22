@@ -37,7 +37,7 @@
                             .then(data => {
                                 if (data.role) {
                                     alert('Login successful as ' + data.role);
-                                    // Save role and token to localStorage or sessionStorage
+
                                     localStorage.setItem('userRole', data.role);
                                     localStorage.setItem('idToken', idToken);
                                 } else {

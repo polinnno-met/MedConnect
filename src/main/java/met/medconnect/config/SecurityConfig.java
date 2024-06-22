@@ -17,8 +17,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/logout",  "/index.html", "/css/**", "/js/**", "/dashboard/**").permitAll()
-                        .requestMatchers("/dashboard").authenticated()
+                        .requestMatchers("/", "/login", "/logout", "/index.html", "/css/**", "/js/**", "/dashboard/**").permitAll()
+                        .requestMatchers("/dashboard", "patients").authenticated()
                         .anyRequest().permitAll()
 
                 )
@@ -30,7 +30,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/index?logout")
+                        .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()

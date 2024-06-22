@@ -9,7 +9,7 @@ if (remainingAppointmentsCtx) {
             labels: ['Completed', 'Scheduled'],
             datasets: [{
                 data: [parseInt(document.getElementById('completedAppointments').value), parseInt(document.getElementById('scheduledAppointments').value)],
-                backgroundColor: ['rgba(143, 162, 217, 0.8)', 'rgba(250,250,250,0.7)'],
+                backgroundColor: ['rgb(124, 143, 196)', 'rgba(124, 143, 196,0.5)'],
                 borderWidth: 0
             }]
         },
@@ -38,34 +38,6 @@ if (remainingAppointmentsCtx) {
 } else {
     console.log('Remaining Appointments Canvas element not found');
 }
-
-// Sidebar toggle
-document.getElementById('sidebarToggle').addEventListener('click', function() {
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.querySelector('.main-content');
-    const sidebarHeader = document.querySelector('.sidebar-header .header-title');
-    // const sidebarToggler = document.querySelector('#sidebarToggle');
-    //
-    //
-    // sidebarToggler.classList
-    sidebar.classList.toggle('active');
-    mainContent.classList.toggle('sidebar-active');
-
-
-
-    if (sidebar.classList.contains('active')) {
-        sidebarHeader.textContent = 'MedConnect';
-    } else {
-        sidebarHeader.textContent = 'M';
-    }
-
-
-    var patientsCard = document.getElementById('patientsCard');
-    var patientsCardHeight = patientsCard.offsetHeight;
-
-    calendar.setOption('height', patientsCardHeight - 10);
-});
-
 
 // // Calendar
 // var calendarEl = document.getElementById('calendar');
@@ -103,12 +75,3 @@ document.getElementById('sidebarToggle').addEventListener('click', function() {
 // console.log("calendar created")
 //
 // calendar.render();
-
-function logout() {
-    localStorage.removeItem('idToken');
-    localStorage.removeItem('userRole');
-    document.getElementById('logoutForm').submit();
-}
-
-
-feather.replace();

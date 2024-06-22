@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/feather-icons"></link>
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">-->
+    <link rel="stylesheet" href="https://unpkg.com/feather-icons">
 
     <!--fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,110 +25,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
 
-
+    <!--auth-->
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCnOzzlp4v7_arUneoK3ZPxx4n-oJ7FnJ4",
-            authDomain: "cs450-5859.firebaseapp.com",
-            projectId: "cs450-5859",
-            storageBucket: "cs450-5859.appspot.com",
-            messagingSenderId: "151931224823",
-            appId: "1:151931224823:web:9efe844600eb230d1e49f2",
-            measurementId: "G-M5E63DF98M"
-        };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        } else {
-            firebase.app();
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            firebase.auth().onAuthStateChanged(user => {
-                if (!user) {
-                    console.log('User not authenticated');
-                    alert('User not authenticated. Please log in first.');
-                    window.location.href = "/";
-                }
-            });
-        });
     </script>
 </head>
 <body>
 
 <div class="d-flex w-100">
-    <nav id="sidebar" class="sidebar active pt-3">
-        <div class="sidebar-header text-center mt-3 mb-4">
-            <span class="header-title">MedConnect</span>
-        </div>
-        <ul class="nav flex-column mt-4">
-            <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center">
-                    <i data-feather="home" class="icon"></i>
-                    <span class="nav-link-text">Home</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center">
-                    <i data-feather="users" class="icon"></i>
-                    <span class="nav-link-text">Patients</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center">
-                    <i data-feather="calendar" class="icon"></i>
-                    <span class="nav-link-text">Appointments</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center">
-                    <i data-feather="file-text" class="icon"></i>
-                    <span class="nav-link-text">Medical Records</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link d-flex align-items-center">
-                    <i data-feather="dollar-sign" class="icon"></i>
-                    <span class="nav-link-text">Billing</span>
-                </a>
-            </li>
-        </ul>
-        <button class="btn btn-primary" id="sidebarToggle">
-            <i data-feather="chevron-right"></i>
-        </button>
-    </nav>
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <div class="main-content flex-grow-1 sidebar-active">
-        <header class="header d-flex justify-content-between align-items-center p-3">
-            <span>Dashboard</span>
-            <div class="header-right d-flex align-items-center">
 
-                <div class="dropdown">
-                    <a class="username-in-header nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                        <img src="https://via.placeholder.com/40" alt="User Image" class="user-image rounded-circle mr-2">
-                        <div class="d-inline-block" th:if="${dashboardData.userInfo}"> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <a th:if="${dashboardData.userInfo}" class="dropdown-item" href="pages-profile.html">
-                            <i class="align-middle me-1 icon" data-feather="user"></i>
-                            Profile
-                            <span class="role-label ml-3" th:text="${dashboardData.userInfo.role}"></span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="index.html"><i class="align-middle me-1 icon" data-feather="settings"></i> Settings & Privacy</a>
-                        <a class="dropdown-item" href="#"><i class="align-middle me-1 icon" data-feather="help-circle"></i> Help Center</a>
-                        <div class="dropdown-divider"></div>
-
-                        <form id="logoutForm" action="/logout" method="POST" style="display:none;"></form>
-                        <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-
+        <header th:replace="~{fragments/header :: header}"></header>
 
         <div class="main justify-content-center">
             <div class="cards-container container-fluid">
@@ -303,11 +217,13 @@
 
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{js/dashboard.js}"></script>
+<script th:src="@{js/main.js}"></script>
+
 </body>
 </html>

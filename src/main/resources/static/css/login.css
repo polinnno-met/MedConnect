@@ -1,0 +1,66 @@
+body {
+    min-height: 100vh;
+    align-items: center;
+}
+
+.card {
+    transition: width 0.9s ease !important;
+}
+
+.login-form {
+    transition: width 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 15px;
+    font-family: Nunito, sans-serif;
+}
+
+.login-form input,
+.login-form button {
+    font-size: 16px;
+    border-radius: 99rem;
+    border: 1px solid #ccc;
+    padding: .5rem .5rem;
+    transition: width 0.5s ease;
+}
+
+.login-form .btn-email {
+    background-color: rgb(124, 143, 196, 0.8);
+    border: none;
+}
+
+.login-form .btn-email:hover {
+    border: none;
+    background-color: rgb(124, 143, 196);
+}
+
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    border-radius: 99rem;
+    padding: .5rem .5rem;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.logout-message {
+    color: #5b6f9f;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-family: "Playwrite PL", sans-serif;
+    font-size: 2.5rem;
+    font-weight: bolder;
+}

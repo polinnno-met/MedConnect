@@ -1,0 +1,40 @@
+<nav th:fragment="sidebar" id="sidebar" class="sidebar active pt-3">
+    <div class="sidebar-header text-center mt-3 mb-4">
+        <span class="header-title">MedConnect</span>
+    </div>
+    <ul class="nav flex-column mt-4">
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="home" class="icon"></i>
+                <span class="nav-link-text">Home</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a onclick="goToPatients()" class="nav-link d-flex align-items-center">
+                <i data-feather="users" class="icon"></i>
+                <span class="nav-link-text">Patients</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="calendar" class="icon"></i>
+                <span class="nav-link-text">Appointments</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="file-text" class="icon"></i>
+                <span class="nav-link-text">Medical Records</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link d-flex align-items-center">
+                <i data-feather="dollar-sign" class="icon"></i>
+                <span class="nav-link-text">Billing</span>
+            </a>
+        </li>
+    </ul>
+    <button class="btn btn-primary" id="sidebarToggle">
+        <i data-feather="chevron-right"></i>
+    </button>
+</nav>
