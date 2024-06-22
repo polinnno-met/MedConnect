@@ -118,9 +118,8 @@
                         <a class="dropdown-item" href="index.html"><i class="align-middle me-1 icon" data-feather="settings"></i> Settings & Privacy</a>
                         <a class="dropdown-item" href="#"><i class="align-middle me-1 icon" data-feather="help-circle"></i> Help Center</a>
                         <div class="dropdown-divider"></div>
-                        <form id="logoutForm" action="/logout" method="POST" style="display:none;">
-                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                        </form>
+
+                        <form id="logoutForm" action="/logout" method="POST" style="display:none;"></form>
                         <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
                     </div>
                 </div>
@@ -172,7 +171,7 @@
                         </div>
                         <div class="card-content flex-grow-1">
                             <p class="card-title mb-0">New Appointment</p>
-                            <p class="card-subtitle mb-0">In top 30%</p>
+                            <p class="card-subtitle mb-0">Set up a patient visit</p>
                         </div>
                         <i data-feather="arrow-right" class="ms-auto"></i>
                     </div>
@@ -181,8 +180,8 @@
                             <i data-feather="file-text"></i>
                         </div>
                         <div class="card-content flex-grow-1">
-                            <p class="card-title mb-0">New Medical Record</p>
-                            <p class="card-subtitle mb-0">In top 30%</p>
+                            <p class="card-title mb-0">New Record</p>
+                            <p class="card-subtitle mb-0">Document medical info</p>
                         </div>
                         <i data-feather="arrow-right" class="ms-auto"></i>
                     </div>

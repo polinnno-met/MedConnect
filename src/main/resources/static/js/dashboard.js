@@ -105,6 +105,8 @@ document.getElementById('sidebarToggle').addEventListener('click', function() {
 // calendar.render();
 
 function logout() {
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('userRole');
     document.getElementById('logoutForm').submit();
 }
 
