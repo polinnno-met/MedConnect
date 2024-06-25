@@ -32,22 +32,26 @@
             <br>
             <p class="logout-message">You have been logged out successfully.</p>
         </div>
-        <div class="form-group w-100">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
-        </div>
-        <div class="form-group w-100">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-        </div>
-        <button type="button" class="btn btn-primary btn-block btn-email col-10 col-md-8 col-lg-8 mt-3" onclick="loginWithEmail()">Login with Email</button>
-        <button type="button" class="google-btn col-10 col-md-8 col-lg-8 mt-3 mb-2" onclick="loginWithGoogle()">
+        <form id="loginForm" action="/login" method="post">
+            <div class="form-group w-100">
+                <label for="email">Email:</label>
+                <input type="email" id="email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group w-100">
+                <label for="password">Password:</label>
+                <input type="password" id="password" class="form-control" placeholder="Password" required>
+            </div>
+            <input type="hidden" id="idToken" name="idToken">
+            <button type="button" class="btn btn-primary btn-block btn-email col-10 col-md-8 col-lg-8 mt-3" onclick="loginWithEmail()">Login with Email</button>
+
+    <button type="button" class="google-btn col-10 col-md-8 col-lg-8 mt-3 mb-2" onclick="loginWithGoogle()">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"> Sign in with Google
         </button>
-
+        </form>
+    </div>
         <button onclick="goToDashboard()">Go to Dashboard</button>
 
-    </div>
+
 </div>
 </div>
 

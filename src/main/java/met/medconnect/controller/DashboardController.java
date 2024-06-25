@@ -1,17 +1,15 @@
 package met.medconnect.controller;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import jakarta.servlet.http.HttpServletResponse;
+import met.medconnect.repo.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.sql.DataSource;
@@ -20,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+
 @Controller
 @RequestMapping("/dashboard")
 public class DashboardController {
@@ -27,54 +26,47 @@ public class DashboardController {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-
     @GetMapping
-    public ModelAndView getDashboard(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
+    public ModelAndView getDashboard(Authentication authentication) throws SQLException {
         ModelAndView modelAndView = new ModelAndView("dashboard");
+        System.out.println("We in getDashboard");
 
-        try {
-            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
-            String uid = decodedToken.getUid();
+        // Extract the staffId and role from the Authentication object
+        String staffId = (String) authentication.getPrincipal();
+        String role = getRoleFromAuthentication(authentication);
 
-            String role = getUserRoleByUid(uid);
+        System.out.println("Dashboard user: " + staffId);
 
-            System.out.println("Dashboard user: " + uid);
+        Map<String, Object> dashboardData = new HashMap<>();
+        dashboardData.put("patients", getPatients(role, staffId));
+        dashboardData.put("appointments", getAppointments(role, staffId));
+        dashboardData.put("medicalRecords", getMedicalRecords(role, staffId));
+        dashboardData.put("billing", getBilling(role, staffId));
+        dashboardData.put("userInfo", getUserInfo(staffId));
+        dashboardData.put("appointmentStatusCounts", getAppointmentStatusCounts(role, staffId));
 
-            Map<String, Object> dashboardData = new HashMap<>();
+        System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
 
-            for (Map<String, Object> patient : getPatients(role, uid)) {
-                System.out.println("next patient:");
-                System.out.println(patient.get("patient_date_of_birth").getClass().getName());
-            }
-            dashboardData.put("patients", getPatients(role, uid));
-            dashboardData.put("appointments", getAppointments(role, uid));
-            dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
-            dashboardData.put("billing", getBilling(role, uid));
-            dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
-
-            Map<String, Integer> appointmentStatusCounts = getAppointmentStatusCounts(role, uid);
-            dashboardData.put("appointmentStatusCounts", appointmentStatusCounts);
-
-            System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
-
-            modelAndView.addObject("dashboardData", dashboardData);
-            return modelAndView;
-        } catch (FirebaseAuthException e) {
-            modelAndView.setViewName("error/401");
-            modelAndView.addObject("error", "Invalid token");
-            return modelAndView;
-        } catch (SQLException e) {
-            modelAndView.setViewName("error/500");
-            modelAndView.addObject("error", "Database error");
-            return modelAndView;
-        }
+        modelAndView.addObject("dashboardData", dashboardData);
+        return modelAndView;
     }
 
-    private Map<String, Integer> getAppointmentStatusCounts(String role, String uid) throws SQLException {
+    private String getRoleFromAuthentication(Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        if (authorities != null && !authorities.isEmpty()) {
+            return authorities.iterator().next().getAuthority().replace("ROLE_", "");
+        }
+        return null;
+    }
+
+    private Map<String, Integer> getAppointmentStatusCounts(String role, String staffId) throws SQLException {
         String query = "SELECT appointment_status, COUNT(*) as count FROM Appointments WHERE appointment_date >= CURDATE() AND appointment_date < CURDATE() + INTERVAL 1 DAY";
-        if (role.equals("Doctor")) {
+        if ("Doctor".equals(role)) {
             query += " AND appointment_doctor_id = ? GROUP BY appointment_status";
         } else {
             query += " GROUP BY appointment_status";
@@ -86,8 +78,8 @@ public class DashboardController {
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            if (role.equals("Doctor")) {
-                statement.setString(1, uid);
+            if ("Doctor".equals(role)) {
+                statement.setString(1, staffId);
             }
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -100,56 +92,15 @@ public class DashboardController {
         return counts;
     }
 
-//
-//    @GetMapping
-//    public ResponseEntity<Map<String, Object>> getDashboardData(@RequestHeader("Authorization") String idToken) throws FirebaseAuthException, SQLException {
-//        try {
-//        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken.replace("Bearer ", ""));
-//        String uid = decodedToken.getUid();
-//
-//        String role = getUserRoleByUid(uid); // Implement this method to get user role from your database
-//
-//        System.out.println("Dashboard user: " + uid);
-//
-//
-//        Map<String, Object> dashboardData = new HashMap<>();
-//        dashboardData.put("patients", getPatients(role, uid));
-//        dashboardData.put("appointments", getAppointments(role, uid));
-//        dashboardData.put("medicalRecords", getMedicalRecords(role, uid));
-//        dashboardData.put("billing", getBilling(role, uid));
-//        dashboardData.put("userInfo", getUserInfo(uid)); // Add user info to the response
-//
-//
-//        System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
-//
-//        return ResponseEntity.ok(dashboardData);
-//        } catch (FirebaseAuthException e) {
-//            Map<String, Object> errorResponse = new HashMap<>();
-//            errorResponse.put("error", "Invalid token");
-//            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body(errorResponse);
-//
-//        } catch (SQLException e) {
-//            Map<String, Object> errorResponse = new HashMap<>();
-//            errorResponse.put("error", "Database error");
-//            return ResponseEntity.status(HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(errorResponse);
-//        }
-//    }
-
-    private String getUserRoleByUid(String uid) throws SQLException {
-        // TODO: Implement logic
-        String role = "Administrator";
-        return role;
-    }
-
-    private List<Map<String, Object>> getPatients(String role, String uid) throws SQLException {
+    private List<Map<String, Object>> getPatients(String role, String staffId) throws SQLException {
         String query = "SELECT * FROM Patients";
-        if (role.equals("Doctor")) {
+        if ("Doctor".equals(role)) {
             query = "SELECT DISTINCT p.* FROM Patients p JOIN Appointments a ON p.patient_id = a.patient_id WHERE a.doctor_id = ?";
         }
-        return executeQuery(query, role.equals("Doctor") ? Collections.singletonList(uid) : Collections.emptyList());
+        return executeQuery(query, "Doctor".equals(role) ? Collections.singletonList(staffId) : Collections.emptyList());
     }
 
-    private List<Map<String, Object>> getAppointments(String role, String uid) throws SQLException {
+    private List<Map<String, Object>> getAppointments(String role, String staffId) throws SQLException {
         String query = "SELECT a.appointment_id, a.appointment_date, a.appointment_status, " +
                 "p.patient_first_name, p.patient_last_name, p.patient_id, " +
                 "s.staff_first_name, s.staff_last_name " +
@@ -160,8 +111,7 @@ public class DashboardController {
         return executeQuery(query, Collections.emptyList());
     }
 
-
-    private List<Map<String, Object>> getMedicalRecords(String role, String uid) throws SQLException {
+    private List<Map<String, Object>> getMedicalRecords(String role, String staffId) throws SQLException {
         String query = "SELECT m.record_id, m.record_diagnosis, a.appointment_date, " +
                 "p.patient_first_name, p.patient_last_name, p.patient_id, " +
                 "s.staff_first_name, s.staff_last_name " +
@@ -173,7 +123,7 @@ public class DashboardController {
         return executeQuery(query, Collections.emptyList());
     }
 
-    private List<Map<String, Object>> getBilling(String role, String uid) throws SQLException {
+    private List<Map<String, Object>> getBilling(String role, String staffId) throws SQLException {
         String query = "SELECT b.bill_id, b.bill_amount, b.bill_status, " +
                 "a.appointment_date, " +
                 "p.patient_first_name, p.patient_last_name, p.patient_id " +
@@ -183,7 +133,6 @@ public class DashboardController {
                 "ORDER BY bill_date DESC";
         return executeQuery(query, Collections.emptyList());
     }
-
 
     private List<Map<String, Object>> executeQuery(String query, List<Object> params) throws SQLException {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -198,7 +147,6 @@ public class DashboardController {
                     for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
                         row.put(resultSet.getMetaData().getColumnName(i), resultSet.getObject(i));
                     }
-//                    System.out.println(row);
                     results.add(row);
                 }
             }
@@ -206,21 +154,13 @@ public class DashboardController {
         return results;
     }
 
-    private Map<String, Object> getUserInfo(String uid) throws SQLException {
+    private Map<String, Object> getUserInfo(String staffId) throws SQLException {
         String query = "SELECT staff_first_name, staff_last_name, staff_role, staff_email FROM Staff WHERE staff_id = ?";
         Map<String, Object> userInfo = new HashMap<>();
 
-        System.out.println(uid);
-        System.out.println(uid);
-        System.out.println(uid);
-        System.out.println(uid);
-        System.out.println(uid);
-        System.out.println(uid);
-
-        System.out.println(uid);
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, uid);
+            statement.setString(1, staffId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     userInfo.put("firstName", resultSet.getString("staff_first_name"));
@@ -234,5 +174,4 @@ public class DashboardController {
         logger.info("User Info: {}", userInfo);
         return userInfo;
     }
-
 }

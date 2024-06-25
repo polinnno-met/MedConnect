@@ -10,35 +10,31 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 function loginWithGoogle() {
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
         .then((result) => {
-            var user = result.user;
-            user.getIdToken().then((idToken) => {
+            result.user.getIdToken().then((idToken) => {
+                console.log(idToken)
                 fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ idToken: idToken })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.role) {
-                            alert('Login successful as ' + data.role);
-                            localStorage.setItem('userRole', data.role);
-                            localStorage.setItem('idToken', idToken);
-                            // window.location.href = "/dashboard";
-                            goToDashboard();
-                        } else {
-                            alert('Login failed');
-                        }
-                    });
+                }).then(response => {
+                    if (response.ok) {
+
+                        window.location.href = "/dashboard";
+                    } else {
+                        alert('Login failed. Please try again.');
+                    }
+                });
             });
         })
         .catch((error) => {
-            console.error(error);
+            console.error("Login with Google failed:", error);
+            alert('Login with Google failed: ' + error.message);
         });
 }
 
@@ -47,30 +43,25 @@ function loginWithEmail() {
     var password = document.getElementById("password").value;
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-            var user = userCredential.user;
-            user.getIdToken().then((idToken) => {
+            userCredential.user.getIdToken().then((idToken) => {
                 fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ idToken: idToken })
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.role) {
-                            alert('Login successful as ' + data.role);
-                            localStorage.setItem('userRole', data.role);
-                            localStorage.setItem('idToken', idToken);
-                            // window.location.href = "/dashboard";
-                            goToDashboard();
-                        } else {
-                            alert('Login failed');
-                        }
-                    });
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = "/dashboard";
+                    } else {
+                        alert('Login failed. Please try again.');
+                    }
+                });
             });
         })
         .catch((error) => {
-            console.error(error);
+            console.error("Login failed:", error);
             alert('Login failed: ' + error.message);
         });
 }
+

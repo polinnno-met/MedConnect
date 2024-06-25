@@ -1,7 +1,3 @@
-
-
-
-
 // Sidebar toggle
 document.getElementById('sidebarToggle').addEventListener('click', function() {
     const sidebar = document.getElementById('sidebar');
@@ -25,6 +21,8 @@ document.getElementById('sidebarToggle').addEventListener('click', function() {
 
 
 function logout() {
+    console.log("Logout function called in js");
+
     localStorage.removeItem('idToken');
     localStorage.removeItem('userRole');
     document.getElementById('logoutForm').submit();
