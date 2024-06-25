@@ -20,9 +20,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/logout", "/index.html", "/css/**", "/dashboard","/dashboard/**", "/js/**").permitAll()
-                        .requestMatchers("/patients/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/login", "/logout", "/index.html", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/patients/**","/dashboard/**").authenticated()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
