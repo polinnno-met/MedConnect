@@ -1,23 +1,23 @@
 <header th:fragment="header" class="header d-flex justify-content-between align-items-center p-3">
-    <span>Dashboard</span>
+    <span th:text="${pageName}"></span>
     <div class="header-right d-flex align-items-center">
-
         <div class="dropdown">
             <a class="username-in-header nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
                 <img src="https://via.placeholder.com/40" alt="User Image" class="user-image rounded-circle mr-2">
-                <div class="d-inline-block" th:if="${dashboardData.userInfo}"> <span th:text="${dashboardData.userInfo.firstName} + ' ' + ${dashboardData.userInfo.lastName}"></span></div>
+                <div class="d-inline-block" th:if="${userInfo}">
+                    <span th:text="${userInfo.firstName} + ' ' + ${userInfo.lastName}"></span>
+                </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end">
-                <a th:if="${dashboardData.userInfo}" class="dropdown-item" href="pages-profile.html">
+                <a th:if="${userInfo}" class="dropdown-item" href="pages-profile.html">
                     <i class="align-middle me-1 icon" data-feather="user"></i>
                     Profile
-                    <span class="role-label ml-3" th:text="${dashboardData.userInfo.role}"></span>
+                    <span class="role-label ml-3" th:text="${userInfo.staffRole}"></span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="../index.html"><i class="align-middle me-1 icon" data-feather="settings"></i> Settings & Privacy</a>
                 <a class="dropdown-item" href="#"><i class="align-middle me-1 icon" data-feather="help-circle"></i> Help Center</a>
                 <div class="dropdown-divider"></div>
-
                 <form id="logoutForm" action="/logout" method="POST"></form>
                 <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
             </div>

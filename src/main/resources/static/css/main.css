@@ -1,14 +1,31 @@
+body {
+    background-color: #ececf1;
+    color: #333;
+    margin: 0;
+    display: flex;
+
+    background-image: url('../media/bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    backdrop-filter: blur(100px);
+}
+
 
 /*Sidebar*/
 
+
 .sidebar {
+
+    margin-top: 10px;
+    margin-bottom: 10px;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: sticky;
     top: 10px;
-    left: 10px;
+    margin-left: 10px;
     height: calc(100vh - 20px);
     background-color: #758fcc;
     width: 80px;

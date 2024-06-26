@@ -42,21 +42,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String staffId = claims.getBody().get("staffId", String.class);
                 String staffRole = claims.getBody().get("staffRole", String.class);
 
-                // Verify the idToken with Firebase
                 FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
 
-                // Create GrantedAuthority object
                 GrantedAuthority authority = (GrantedAuthority) () -> "ROLE_" + staffRole.toUpperCase();
 
-                // Set Authentication object
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(staffId, null, Collections.singletonList(authority));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (FirebaseAuthException e) {
                 SecurityContextHolder.clearContext();
+                clearAuthTokenCookie(response);
+
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Firebase token");
+
                 return;
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
+                clearAuthTokenCookie(response);
+
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
                 return;
             }
@@ -75,4 +77,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+
+    private void clearAuthTokenCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("AuthToken", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
 }

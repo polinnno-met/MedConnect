@@ -1,7 +1,6 @@
 package met.medconnect.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-import met.medconnect.security.FirebaseAuthenticationFilter;
 import met.medconnect.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
