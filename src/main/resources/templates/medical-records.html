@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">-->
     <link rel="stylesheet" href="https://unpkg.com/feather-icons">
 
     <!--fonts-->
@@ -49,12 +48,14 @@
                         <div class="card" id="medicalRecordsCard">
                             <div class="card-header">
                                 <h5 class="card-title">Medical Records</h5>
+                                <div id="pageName" th:text="'medicalRecords'" style="display:none;"></div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-sm" th:if="${medicalRecords}">
                                         <thead>
                                         <tr>
+                                            <th></th>
                                             <th>ID</th>
                                             <th>Patient</th>
                                             <th>Doctor</th>
@@ -66,17 +67,31 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="record : ${medicalRecords}">
+                                        <tr th:each="record : ${medicalRecords} ">
+                                            <td class="d-flex justify-content-left pr-3">
+
+                                                <div class="dropdown">
+                                                    <a href="#"  data-bs-toggle="dropdown">
+                                                        <i class="row-menu" data-feather="more-vertical"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#" onclick="editRecord(${record.recordId})">Edit</a>
+                                                        <a class="dropdown-item" href="#" onclick="addMedicalRecord(${record.recordId})">Add Medical Record</a>
+                                                        <a class="dropdown-item" href="#" onclick="changeStatus(${record.recordId})">Change Status</a>
+                                                        <a class="dropdown-item" href="#" onclick="reschedule(${record.recordId})">Reschedule</a>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                            </td>
                                             <td th:text="${record.recordId}"></td>
                                             <td th:text="${record.patient.firstName} + ' ' + ${record.patient.lastName}"></td>
-
                                             <td th:text="${record.doctor.firstName} + ' ' + ${record.doctor.lastName}"></td>
-
                                             <td th:text="${#temporals.format(record.appointment.getAppointmentDate(), 'dd/MM/yyyy HH:mm')}"></td>
                                             <td th:text="${record.diagnosis}"></td>
                                             <td th:text="${record.treatment}"></td>
                                             <td th:text="${record.prescription}"></td>
                                             <td th:text="${record.notes}"></td>
+
                                         </tr>
                                         </tbody>
                                     </table>
@@ -104,13 +119,90 @@
 
     </div>
 </div>
-<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>-->
-<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{js/medical-records.js}"></script>
 <script th:src="@{js/main.js}"></script>
+
+<script>
+    function editRecord(recordId) {
+        fetch(`/editRecord/${recordId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: recordId })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            // todo: handle response
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+
+    function addMedicalRecord(recordId) {
+        fetch(`/addMedicalRecord/${recordId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: recordId })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            // todo: handle response data
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+
+    function changeStatus(recordId) {
+        fetch(`/changeStatus/${recordId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: recordId })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            // Handle response data
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+
+    function reschedule(recordId) {
+        // Send request to reschedule
+        fetch(`/reschedule/${recordId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: recordId })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            // Handle response data
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    }
+</script>
 
 </body>
 </html>
