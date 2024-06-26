@@ -3,6 +3,10 @@ body {
     align-items: center;
 }
 
+.container {
+    background-color: transparent;
+}
+
 .card {
     transition: width 0.9s ease !important;
 }

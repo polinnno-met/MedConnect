@@ -69,7 +69,7 @@ public class UserController {
             response.addCookie(authCookie);
 
             return ResponseEntity.ok().body("{\"redirectUrl\": \"/dashboard\"}");
-        } catch (FirebaseAuthException | SQLException e) {
+        } catch (FirebaseAuthException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid ID token or database error.");
         }
     }

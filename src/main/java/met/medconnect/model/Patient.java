@@ -1,25 +1,50 @@
 package met.medconnect.model;
 
+
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 
+@Entity
+@Table(name = "Patients")
 public class Patient {
-    private int patientId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_id")
+    private Long patientId;
+
+    @Column(name = "patient_first_name")
     private String firstName;
+
+    @Column(name = "patient_last_name")
     private String lastName;
-    private Date dateOfBirth;
+
+    @Column(name = "patient_date_of_birth")
+    private LocalDate dateOfBirth;
+
+    @Column(name = "patient_gender")
     private String gender;
+
+    @Column(name = "patient_phone_number")
     private String phoneNumber;
+
+    @Column(name = "patient_email")
     private String email;
+
+    @Column(name = "patient_address")
     private String address;
+
+    @Column(name = "patient_emergency_contact")
     private String emergencyContact;
 
     // Getters and Setters
-
-    public int getPatientId() {
+    public Long getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(int patientId) {
+    public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
 
@@ -39,11 +64,11 @@ public class Patient {
         this.lastName = lastName;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -1,8 +1,8 @@
 package met.medconnect.controller;
 
-import met.medconnect.model.Patient;
+import met.medconnect.model.MedicalRecord;
 import met.medconnect.model.User;
-import met.medconnect.repo.PatientRepository;
+import met.medconnect.repo.MedicalRecordRepository;
 import met.medconnect.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -12,29 +12,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Controller
-public class PatientController {
+public class MedicalRecordController {
 
     @Autowired
-    private PatientRepository patientRepository;
-
+    private MedicalRecordRepository medicalRecordRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/patients")
-    public String getPatients(Authentication authentication, Model model) throws SQLException {
+    @GetMapping("/medical-records")
+    public String getMedicalRecords(Authentication authentication, Model model) throws SQLException {
         String staffId = (String) authentication.getPrincipal();
-        List<Patient> patients = patientRepository.findAll();
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAllOrderByAppointmentDateAsc();
         User user = userRepository.findById(staffId);
 
-        model.addAttribute("patients", patients);
+        model.addAttribute("medicalRecords", medicalRecords);
         model.addAttribute("userInfo", user);
-        model.addAttribute("pageName", "Patients");
+        model.addAttribute("pageName", "Medical Records");
 
-        return "patients";
-
+        return "medical-records";
     }
 }

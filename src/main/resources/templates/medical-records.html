@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patients</title>
+    <title>Medical Records</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
@@ -46,37 +46,37 @@
             <div class="cards-container container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-10 mb-4">
-                        <div class="card" id="patientsCard">
+                        <div class="card" id="medicalRecordsCard">
                             <div class="card-header">
-                                <h5 class="card-title">Patients</h5>
+                                <h5 class="card-title">Medical Records</h5>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-sm" th:if="${patients}">
+                                    <table class="table table-bordered table-hover table-sm" th:if="${medicalRecords}">
                                         <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Date of Birth</th>
-                                            <th>Gender</th>
-                                            <th>Phone Number</th>
-                                            <th>Email</th>
-                                            <th>Address</th>
-                                            <th>Emergency Contact</th>
+                                            <th>Patient</th>
+                                            <th>Doctor</th>
+                                            <th>Time</th>
+                                            <th>Diagnosis</th>
+                                            <th>Treatment</th>
+                                            <th>Prescription</th>
+                                            <th>Notes</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="patient : ${patients}">
-                                            <td th:text="${patient.patientId}"></td>
-                                            <td th:text="${patient.firstName}"></td>
-                                            <td th:text="${patient.lastName}"></td>
-                                            <td th:text="${patient.dateOfBirth}"></td>
-                                            <td th:text="${patient.gender}"></td>
-                                            <td th:text="${patient.phoneNumber}"></td>
-                                            <td th:text="${patient.email}"></td>
-                                            <td th:text="${patient.address}"></td>
-                                            <td th:text="${patient.emergencyContact}"></td>
+                                        <tr th:each="record : ${medicalRecords}">
+                                            <td th:text="${record.recordId}"></td>
+                                            <td th:text="${record.patient.firstName} + ' ' + ${record.patient.lastName}"></td>
+
+                                            <td th:text="${record.doctor.firstName} + ' ' + ${record.doctor.lastName}"></td>
+
+                                            <td th:text="${#temporals.format(record.appointment.getAppointmentDate(), 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${record.diagnosis}"></td>
+                                            <td th:text="${record.treatment}"></td>
+                                            <td th:text="${record.prescription}"></td>
+                                            <td th:text="${record.notes}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -91,26 +91,10 @@
                                 <i data-feather="calendar"></i>
                             </div>
                             <div class="card-content flex-grow-1">
-                                <p class="card-title mb-0">New Patient</p>
-                                <p class="card-subtitle mb-0">Set up a new patient</p>
-                            </div>
-                            <i data-feather="arrow-right" class="ms-auto"></i>
-                        </div>
-                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2">
-                            <div class="icon-container me-3">
-                                <i data-feather="file-text"></i>
-                            </div>
-                            <div class="card-content flex-grow-1">
                                 <p class="card-title mb-0">New Record</p>
                                 <p class="card-subtitle mb-0">Document medical info</p>
                             </div>
                             <i data-feather="arrow-right" class="ms-auto"></i>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4 col-lg-3 mb-4">
-                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2">
-                            <canvas id="ageDistributionChart"></canvas>
-
                         </div>
                     </div>
 
@@ -125,7 +109,7 @@
 <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{js/patients.js}"></script>
+<script th:src="@{js/medical-records.js}"></script>
 <script th:src="@{js/main.js}"></script>
 
 </body>

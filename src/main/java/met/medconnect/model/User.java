@@ -1,18 +1,31 @@
 package met.medconnect.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "staff") // Assuming the table name is 'staff'
 public class User {
 
     @Id
+    @Column(name = "staff_id")
     private String staffId;
+
+    @Column(name = "staff_first_name")
     private String firstName;
+
+    @Column(name = "staff_last_name")
     private String lastName;
+
+    @Column(name = "staff_role")
     private String staffRole;
+
+    @Column(name = "staff_phone_number")
     private String phoneNumber;
+
+    @Column(name = "staff_email")
     private String email;
+
+    @Column(name = "staff_address")
     private String address;
 
     // Getters and Setters
@@ -72,6 +85,4 @@ public class User {
     public void setAddress(String address) {
         this.address = address;
     }
-
-
 }

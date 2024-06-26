@@ -1,28 +1,27 @@
-fetchDashboardData();
-
-function fetchDashboardData() {
-    console.log("function entered")
-    var idToken = localStorage.getItem('idToken');
-    if (idToken) {
-        fetch('/dashboard/data', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + idToken
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            renderDashboard(data);
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-            alert('Failed to fetch dashboard data');
-            window.location.href = "/404";
-        });
-    } else {
-        alert('User not authenticated. Please log in first.');
-        window.location.href = "/login";
-    }
+    var ctx = document.getElementById('ageDistributionChart').getContext('2d');
+    var ageDistributionChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: ['20-30', '31-40', '41-50', '51-60'],
+    datasets: [{
+    label: 'Number of Patients',
+    data: [0, 2, 2, 1], // assuming age ranges based on table data
+    backgroundColor: '#42A5F5',
+}]
+},
+    options: {
+    responsive: true,
+    title: {
+    display: true,
+    text: 'Age Distribution'
+},
+    scales: {
+    yAxes: [{
+    ticks: {
+    beginAtZero: true
 }
+}]
+}
+}
+});
+

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import met.medconnect.model.User;
 import met.medconnect.repo.DashboardRepository;
 import met.medconnect.repo.UserRepository;
+import met.medconnect.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,10 @@ public class DashboardController {
     @Autowired
     private UserRepository userRepository;
 
+
+    @Autowired
+    private UserService userService;
+
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping
@@ -38,7 +43,7 @@ public class DashboardController {
         System.out.println("We in getDashboard");
 
         String staffId = (String) authentication.getPrincipal();
-        String role = getRoleFromAuthentication(authentication);
+        String role = userService.getRoleFromAuthentication(authentication);
 
         System.out.println("Dashboard user: " + staffId);
 
@@ -52,7 +57,7 @@ public class DashboardController {
         dashboardData.put("billing", dashboardRepository.getBilling(role, staffId));
         dashboardData.put("appointmentStatusCounts", dashboardRepository.getAppointmentStatusCounts(role, staffId));
 
-        System.out.println("We seem to be good in the controller: Dashboard Data: " + dashboardData);
+        System.out.println("We seem to be good in the controller with user " + user.getFirstName());
 
         model.addAttribute("dashboardData", dashboardData);
         model.addAttribute("userInfo", user);
@@ -61,12 +66,6 @@ public class DashboardController {
     }
 
 
-    private String getRoleFromAuthentication(Authentication authentication) {
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        if (authorities != null && !authorities.isEmpty()) {
-            return authorities.iterator().next().getAuthority().replace("ROLE_", "");
-        }
-        return null;
-    }
+
 
 }
