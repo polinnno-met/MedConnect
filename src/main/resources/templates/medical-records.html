@@ -69,30 +69,27 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="record : ${medicalRecords} ">
-                                            <td class="d-flex justify-content-left pr-3">
-
+                                            <td class="align-middle pr-3">
                                                 <div class="dropdown">
-                                                    <a href="#"  data-bs-toggle="dropdown">
+                                                    <a href="#" data-bs-toggle="dropdown">
                                                         <i class="row-menu" data-feather="more-vertical"></i>
                                                     </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#" onclick="editRecord(${record.recordId})">Edit</a>
-                                                        <a class="dropdown-item" href="#" onclick="addMedicalRecord(${record.recordId})">Add Medical Record</a>
-                                                        <a class="dropdown-item" href="#" onclick="changeStatus(${record.recordId})">Change Status</a>
-                                                        <a class="dropdown-item" href="#" onclick="reschedule(${record.recordId})">Reschedule</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/edit/{id}(id=${record.recordId})}">Edit</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/add/{id}(id=${record.recordId})}">Add Medical Record</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/change-status/{id}(id=${record.recordId})}">Change Status</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/reschedule/{id}(id=${record.recordId})}">Reschedule</a>
                                                     </div>
                                                 </div>
-                                                <br>
                                             </td>
-                                            <td th:text="${record.recordId}"></td>
-                                            <td th:text="${record.patient.firstName} + ' ' + ${record.patient.lastName}"></td>
-                                            <td th:text="${record.doctor.firstName} + ' ' + ${record.doctor.lastName}"></td>
-                                            <td th:text="${#temporals.format(record.appointment.getAppointmentDate(), 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="${record.diagnosis}"></td>
-                                            <td th:text="${record.treatment}"></td>
-                                            <td th:text="${record.prescription}"></td>
-                                            <td th:text="${record.notes}"></td>
-
+                                            <td class="align-middle" th:text="${record.recordId}"></td>
+                                            <td class="align-middle" th:text="${record.patient.firstName} + ' ' + ${record.patient.lastName}"></td>
+                                            <td class="align-middle" th:text="${record.doctor.firstName} + ' ' + ${record.doctor.lastName}"></td>
+                                            <td class="align-middle" th:text="${#temporals.format(record.appointment.getAppointmentDate(), 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td class="align-middle" th:text="${record.diagnosis}"></td>
+                                            <td class="align-middle" th:text="${record.treatment}"></td>
+                                            <td class="align-middle" th:text="${record.prescription}"></td>
+                                            <td class="align-middle" th:text="${record.notes}"></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -127,82 +124,7 @@
 <script th:src="@{js/main.js}"></script>
 
 <script>
-    function editRecord(recordId) {
-        fetch(`/editRecord/${recordId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: recordId })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            // todo: handle response
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    }
-
-    function addMedicalRecord(recordId) {
-        fetch(`/addMedicalRecord/${recordId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: recordId })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            // todo: handle response data
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    }
-
-    function changeStatus(recordId) {
-        fetch(`/changeStatus/${recordId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: recordId })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            // Handle response data
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    }
-
-    function reschedule(recordId) {
-        // Send request to reschedule
-        fetch(`/reschedule/${recordId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: recordId })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            // Handle response data
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    }
+    feather.replace();
 </script>
 
 </body>
