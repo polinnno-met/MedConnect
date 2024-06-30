@@ -3,7 +3,6 @@
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<!--    <link rel="stylesheet" th:href="@{/css/dashboard.css}">-->
     <link rel="stylesheet" th:href="@{/css/main.css}">
 
     <link rel="stylesheet" th:href="@{/css/login.css}">
@@ -43,11 +42,11 @@
                     </button>
                 </div>
             </form>
-            <button class="btn btn-secondary btn-block mt-3" onclick="goToDashboard()">Go to Dashboard</button>
         </div>
     </div>
 </div>
 
+<script th:src="@{/js/firebase_auth.js}"></script>
 <script th:src="@{/js/login.js}"></script>
 <script th:src="@{/js/main.js}"></script>
 </body>

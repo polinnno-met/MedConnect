@@ -11,15 +11,7 @@ public class MedicalRecord {
     @Column(name = "record_id")
     private Long recordId;
 
-    @ManyToOne
-    @JoinColumn(name = "record_patient_id")
-    private Patient patient;
-
-    @ManyToOne
-    @JoinColumn(name = "record_doctor_id")
-    private User doctor;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "record_appointment_id")
     private Appointment appointment;
 
@@ -35,30 +27,12 @@ public class MedicalRecord {
     @Column(name = "record_notes")
     private String notes;
 
-    // Getters and Setters
 
     public Long getRecordId() {
         return recordId;
     }
-
     public void setRecordId(Long recordId) {
         this.recordId = recordId;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public User getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(User doctor) {
-        this.doctor = doctor;
     }
 
     public Appointment getAppointment() {

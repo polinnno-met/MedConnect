@@ -1,13 +1,19 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+
 body {
     color: #333;
     margin: 0;
     display: flex;
+
 
     background-image: url('../media/bg.jpg') !important;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
     backdrop-filter: blur(100px);
+    font-family: "Nunito", sans-serif;
 }
 
 
@@ -33,23 +39,6 @@ body {
     overflow-x: hidden;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    /*position: sticky;*/
-    /*top: 10px;*/
-    /*left: 10px;*/
-    /*height: calc(100vh - 20px);*/
-    /*background-color: #758fcc;*/
-
-
-
-    /*width: 80px;*/
-    /*!*background-color: rgba(143, 162, 217, 0.8);*!*/
-
-    /*!*background: rgba(171, 182, 206, 1);*!*/
-    /*border-radius: 15px;*/
-    /*transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), left 0.5s cubic-bezier(0.4, 0, 0.2, 1);*/
-    /*overflow-x: hidden;*/
-    /*z-index: 1000;*/
-    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
 }
 
 #sidebarToggle {
@@ -62,7 +51,15 @@ body {
 
 }
 
-
+.role-label {
+    color: #758fcc;
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    font-family: Nunito, sans-serif;
+    font-size: 90%;
+    background-color: rgba(117, 143, 204, 0.25);
+    border: #758fcc solid 1px;
+    border-radius: 4rem;
+}
 
 .sidebar.active #sidebarToggle {
     transform: scale(-1, 1);
@@ -177,7 +174,7 @@ body {
 
 .card {
     background-color: rgba(255, 255, 255, 0.6) !important;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 5px;
     box-sizing: border-box;
     display: flex;
@@ -205,4 +202,20 @@ body {
 .row-menu {
     color: #5b6f9f;
     left: 0;
+}
+
+.page-name {
+    font-family: Nunito, sans-serif;
+    font-weight: bolder;
+    color: rgb(66, 66, 66);
+    font-size: 1.1rem;
+    /*margin-left: 2rem;*/
+    /*padding: .4rem 3rem;*/
+    /*background-color: rgba(117, 143, 204, 0.5);*/
+    /*border-radius: 99rem;*/
+}
+
+.placeholder-name {
+    color: transparent;
+    background-color: transparent;
 }

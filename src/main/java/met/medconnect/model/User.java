@@ -3,12 +3,12 @@ package met.medconnect.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "staff") // Assuming the table name is 'staff'
+@Table(name = "staff")
 public class User {
 
     @Id
     @Column(name = "staff_id")
-    private String staffId;
+    private Long staffId;
 
     @Column(name = "staff_first_name")
     private String firstName;
@@ -28,13 +28,12 @@ public class User {
     @Column(name = "staff_address")
     private String address;
 
-    // Getters and Setters
 
-    public String getStaffId() {
+    public Long getStaffId() {
         return staffId;
     }
 
-    public void setStaffId(String staffId) {
+    public void setStaffId(Long staffId) {
         this.staffId = staffId;
     }
 
@@ -55,7 +54,7 @@ public class User {
     }
 
     public String getStaffRole() {
-        return staffRole;
+        return staffRole.toUpperCase();
     }
 
     public void setStaffRole(String staffRole) {

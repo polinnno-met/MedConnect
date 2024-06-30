@@ -39,15 +39,13 @@ public class UserController {
     @Autowired
     private DataSource dataSource;
 
-    @GetMapping({"/", "/login"})
+    @GetMapping({ "/login"})
     public String showLoginPage() {
-        System.out.println("We are in the login page controller.");
         return "login";
     }
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody Map<String, String> body, HttpServletResponse response) {
-        System.out.println("Posted the login request.");
         String idToken = body.get("idToken");
         if (idToken == null) {
             return ResponseEntity.badRequest().body("Missing ID token.");
@@ -60,7 +58,8 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not found.");
             }
 
-            String jwt = TokenUtility.generateToken(idToken, user.getStaffId(), user.getStaffRole());
+            String jwt = TokenUtility.generateToken(idToken, user.getStaffId().toString(), user.getStaffRole());
+
             Cookie authCookie = new Cookie("AuthToken", jwt);
             authCookie.setHttpOnly(true);
             authCookie.setPath("/");

@@ -52,7 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
                 clearAuthTokenCookie(response);
 
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Firebase token");
                 response.sendRedirect("/login");
 
                 return;
@@ -60,7 +59,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.clearContext();
                 clearAuthTokenCookie(response);
 
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
                 response.sendRedirect("/login");
 
                 return;

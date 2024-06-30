@@ -52,16 +52,6 @@
     content: none;
 }
 
-.role-label {
-    color: #758fcc;
-    padding: 0.3rem 1rem 0.3rem 1rem;
-    font-family: Nunito, sans-serif;
-    font-size: 90%;
-    background-color: rgba(117, 143, 204, 0.25);
-    border: #758fcc solid 1px;
-    border-radius: 4rem;
-}
-
 .see-more-btn {
     border: none;
     background: none;

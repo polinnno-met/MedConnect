@@ -1,6 +1,9 @@
 package met.medconnect.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,12 +23,14 @@ public class Bill {
     private Double amount;
 
     @Column(name = "bill_date")
-    private LocalDateTime date;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "bill_status")
-    private String status;
+    private BillStatus status;
 
-    // Getters and Setters
 
     public Long getBillId() {
         return billId;
@@ -51,19 +56,28 @@ public class Bill {
         this.amount = amount;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getStatus() {
+    public BillStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BillStatus status) {
         this.status = status;
     }
+
+    public String getStatusDisplay() {
+        if (this.status == BillStatus.NA) {
+            return "N/A";
+        }
+        return this.status.toString();
+    }
 }
+
+

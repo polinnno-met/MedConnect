@@ -17,8 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
 
-    <!--calendar-->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 
     <!--popups-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -45,11 +43,36 @@
         <div class="main justify-content-center">
             <div class="cards-container container-fluid">
                 <div class="row justify-content-center">
-                    <div class="col-12 col-md-10 mb-4">
+                    <div class="col-md-3 ml-md-2">
+                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2 mx-1" onclick="location.href='/medical-records/add'" style="cursor:pointer;">
+                            <div class="icon-container me-3">
+                                <i data-feather="file-text"></i>
+                            </div>
+                            <div class="card-content flex-grow-1">
+                                <p class="card-title mb-0">New Record</p>
+                                <p class="card-subtitle mb-0">Document medical info</p>
+                            </div>
+                            <i data-feather="arrow-right" class="ms-auto"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2 mx-1" onclick="location.href='/medical-records/edit'" style="cursor:pointer;">
+                            <div class="icon-container me-3">
+                                <i data-feather="file-text"></i>
+                            </div>
+                            <div class="card-content flex-grow-1">
+                                <p class="card-title mb-0">Edit Record</p>
+                                <p class="card-subtitle mb-0">Update medical info</p>
+                            </div>
+                            <i data-feather="arrow-right" class="ms-auto"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-10 my-2">
                         <div class="card" id="medicalRecordsCard">
                             <div class="card-header">
                                 <h5 class="card-title">Medical Records</h5>
-                                <div id="pageName" th:text="'medicalRecords'" style="display:none;"></div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -75,16 +98,15 @@
                                                         <i class="row-menu" data-feather="more-vertical"></i>
                                                     </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" th:href="@{/medical-records/edit/{id}(id=${record.recordId})}">Edit</a>
-                                                        <a class="dropdown-item" th:href="@{/medical-records/add/{id}(id=${record.recordId})}">Add Medical Record</a>
-                                                        <a class="dropdown-item" th:href="@{/medical-records/change-status/{id}(id=${record.recordId})}">Change Status</a>
-                                                        <a class="dropdown-item" th:href="@{/medical-records/reschedule/{id}(id=${record.recordId})}">Reschedule</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/edit(recordId=${record.recordId})}">Edit</a>
+                                                        <a class="dropdown-item" th:href="@{/medical-records/delete(recordId=${record.recordId})}" onclick="return confirm('Are you sure you want to delete this medical record?');">Delete</a>
                                                     </div>
+
                                                 </div>
                                             </td>
                                             <td class="align-middle" th:text="${record.recordId}"></td>
-                                            <td class="align-middle" th:text="${record.patient.firstName} + ' ' + ${record.patient.lastName}"></td>
-                                            <td class="align-middle" th:text="${record.doctor.firstName} + ' ' + ${record.doctor.lastName}"></td>
+                                            <td class="align-middle" th:text="${record.appointment.patient.firstName} + ' ' + ${record.appointment.patient.lastName}"></td>
+                                            <td class="align-middle" th:text="${record.appointment.doctor.firstName} + ' ' + ${record.appointment.doctor.lastName}"></td>
                                             <td class="align-middle" th:text="${#temporals.format(record.appointment.getAppointmentDate(), 'dd/MM/yyyy HH:mm')}"></td>
                                             <td class="align-middle" th:text="${record.diagnosis}"></td>
                                             <td class="align-middle" th:text="${record.treatment}"></td>
@@ -98,19 +120,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-3 mb-4">
-                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2">
-                            <div class="icon-container me-3">
-                                <i data-feather="calendar"></i>
-                            </div>
-                            <div class="card-content flex-grow-1">
-                                <p class="card-title mb-0">New Record</p>
-                                <p class="card-subtitle mb-0">Document medical info</p>
-                            </div>
-                            <i data-feather="arrow-right" class="ms-auto"></i>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -120,7 +129,6 @@
 
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{js/medical-records.js}"></script>
 <script th:src="@{js/main.js}"></script>
 
 <script>

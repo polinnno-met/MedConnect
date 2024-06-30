@@ -2,6 +2,7 @@ package met.medconnect.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Patient {
     private String lastName;
 
     @Column(name = "patient_date_of_birth")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Column(name = "patient_gender")
@@ -39,7 +41,6 @@ public class Patient {
     @Column(name = "patient_emergency_contact")
     private String emergencyContact;
 
-    // Getters and Setters
     public Long getPatientId() {
         return patientId;
     }

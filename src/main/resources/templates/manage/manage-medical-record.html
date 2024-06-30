@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageName} == 'Edit Medical Record' ? 'Edit Medical Record' : 'Add Medical Record'"></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <link rel="stylesheet" th:href="@{/css/manage-page.css}">
+    <link rel="stylesheet" href="https://unpkg.com/feather-icons">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!--popups-->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="d-flex w-100">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="main-content flex-grow-1 sidebar-active">
+
+        <header th:replace="~{fragments/header :: header}"></header>
+
+        <div class="main justify-content-center">
+            <div class="cards-container container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 mb-4">
+                        <div class="form-container card">
+
+                            <div class="card-body">
+                                <div th:if="${pageName == 'Edit Medical Record'}">
+                                    <form th:action="@{/medical-records/edit}" method="get">
+                                        <div class="form-group">
+                                            <label for="recordSelector">Select Medical Record</label>
+                                            <select id="recordSelector" name="recordId" class="form-control">
+                                                <option value="" th:if="${medicalRecord == null}" selected disabled>Select a record...</option>
+                                                <option th:each="record : ${allMedicalRecords}"
+                                                        th:value="${record.recordId}"
+                                                        th:text="'# ' + ${record.recordId} + ' - ' +
+                                                                 ${record.appointment.patient.firstName} + ' ' + ${record.appointment.patient.lastName} + ' at ' +
+                                                                 ${#temporals.format(record.appointment.getAppointmentDate(), 'HH:mm dd/MM/yyyy ')} +
+                                                                 (${userInfo.staffRole} != 'DOCTOR' ? ' - Dr. ' + ${record.appointment.doctor.firstName} + ' ' + ${record.appointment.doctor.lastName} : '')"
+                                                        th:selected="${medicalRecord != null and record.recordId == medicalRecord.recordId}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mb-3 px-3">OK</button>
+                                    </form>
+                                </div>
+
+                                <div th:if="${medicalRecord != null}">
+                                    <form th:action="@{/medical-records/save}" method="post" th:object="${medicalRecord}">
+                                        <input type="hidden" th:field="*{recordId}"/>
+
+                                        <div class="form-section my-3">
+                                            <h6 class="section-title">Medical Record Details</h6>
+                                            <div class="form-row justify-content-center">
+                                                <div class="form-group col-lg-5 col-md-6">
+                                                    <label for="diagnosis">Diagnosis</label>
+                                                    <input type="text" id="diagnosis" th:field="*{diagnosis}"
+                                                           class="form-control"/>
+                                                </div>
+                                                <div class="form-group col-lg-5 col-md-6 offset-lg-1">
+                                                    <label for="treatment">Treatment</label>
+                                                    <input type="text" id="treatment" th:field="*{treatment}"
+                                                           class="form-control"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-row justify-content-center">
+                                                <div class="form-group col-md-11">
+                                                    <label for="prescription">Prescription</label>
+                                                    <input type="text" id="prescription" th:field="*{prescription}"
+                                                           class="form-control"/>
+                                                </div>
+                                                <div class="form-group col-md-11">
+                                                    <label for="notes">Notes</label>
+                                                    <textarea id="notes" th:field="*{notes}"
+                                                              class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-section my-3 " th:if="${pageName == 'Add Medical Record'}">
+                                            <h6 class="section-title">Appointment Selection</h6>
+                                            <div class="form-row justify-content-center">
+
+                                            <div class="form-group col-lg-11">
+                                                <label for="appointment">Appointment</label>
+                                                <select id="appointment" name="appointment" class="form-control select2" required>
+                                                    <option value="" selected disabled>Select an appointment...</option>
+                                                    <option th:each="appointmentOption : ${accessibleAppointments}"
+                                                            th:value="${appointmentOption.appointmentId}" th:text="'# ' + ${appointmentOption.appointmentId} + ' - ' +
+                                                             ${appointmentOption.patient.firstName} + ' ' + ${appointmentOption.patient.lastName} + ' at ' +
+                                                             ${#temporals.format(appointmentOption.appointmentDate, 'HH:mm dd/MM/yyyy ')}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mx-3 px-3">Save</button>
+                                    </form>
+                                </div>
+                                <div th:if="${medicalRecord == null}">
+                                    <p class="text-muted">Please select a medical record to edit.</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{../js/main.js}"></script>
+<script>
+    $(document).ready(function() {
+        $('#appointment').select2({
+            placeholder: "Select an appointment",
+            allowClear: true
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,10 +1,12 @@
 package met.medconnect.model;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Appointments")
+@Table(name = "appointments")
 public class Appointment {
 
     @Id
@@ -21,15 +23,15 @@ public class Appointment {
     private User doctor;
 
     @Column(name = "appointment_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime appointmentDate;
 
     @Column(name = "appointment_reason")
     private String reason;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "appointment_status")
-    private String status;
-
-    // Getters and Setters
+    private AppointmentStatus status;
 
 
     public Long getAppointmentId() {
@@ -68,15 +70,16 @@ public class Appointment {
         return reason;
     }
 
-    public void setReason(String appointmentReason) {
-        this.reason = appointmentReason;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
-    public String getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String appointmentStatus) {
-        this.status = appointmentStatus;
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
     }
+
 }

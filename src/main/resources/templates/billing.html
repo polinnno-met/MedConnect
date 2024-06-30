@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">-->
     <link rel="stylesheet" href="https://unpkg.com/feather-icons">
 
     <!--fonts-->
@@ -16,9 +15,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Playwrite+PL:wght@100..400&display=swap" rel="stylesheet">
-
-    <!--calendar-->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 
     <!--popups-->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -45,6 +41,51 @@
         <div class="main justify-content-center">
             <div class="cards-container container-fluid">
                 <div class="row justify-content-center">
+                    <div class="col-12 col-md-4 col-lg-3 mb-4">
+                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2 mx-1" onclick="location.href='/billing/add'" style="cursor:pointer;">
+                            <div class="icon-container me-3">
+                                <i data-feather="plus"></i>
+                            </div>
+                            <div class="card-content flex-grow-1">
+                                <p class="card-title mb-0">New Bill</p>
+                                <p class="card-subtitle mb-0">Create a new bill</p>
+                            </div>
+                            <i data-feather="arrow-right" class="ms-auto"></i>
+                        </div>
+                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2 mx-1" onclick="location.href='/billing/edit'" style="cursor:pointer;">
+                            <div class="icon-container me-3">
+                                <i data-feather="dollar-sign"></i>
+                            </div>
+                            <div class="card-content flex-grow-1">
+                                <p class="card-title mb-0">Edit Bill</p>
+                                <p class="card-subtitle mb-0">Change an existing bill</p>
+                            </div>
+                            <i data-feather="arrow-right" class="ms-auto"></i>
+                        </div>
+                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2 mx-1" onclick="location.href='/medical-records/add'" style="cursor:pointer;">
+                            <div class="icon-container me-3">
+                                <i data-feather="file-text"></i>
+                            </div>
+                            <div class="card-content flex-grow-1">
+                                <p class="card-title mb-0">New Record</p>
+                                <p class="card-subtitle mb-0">Document medical info</p>
+                            </div>
+                            <i data-feather="arrow-right" class="ms-auto"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-7 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">Bill Status Statistics</h5>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" id="billStatusCounts" th:value="${billStatusCountsJson}"/>
+                                <canvas id="billStatusChart"></canvas>
+                                <p th:if="${billStatusCounts == null || billStatusCounts.isEmpty()}" class="text-center text-muted">No billing data available.</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 col-md-10 mb-4">
                         <div class="card" id="billingRecordsCard">
                             <div class="card-header">
@@ -55,6 +96,7 @@
                                     <table class="table table-bordered table-hover table-sm" th:if="${bills}">
                                         <thead>
                                         <tr>
+                                            <th></th>
                                             <th>ID</th>
                                             <th>Appointment ID</th>
                                             <th>Amount</th>
@@ -64,29 +106,36 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="bill : ${bills}">
-                                            <td th:text="${bill.billId}"></td>
-                                            <td th:text="${bill.appointment.appointmentId}"></td>
-                                            <td th:text="${bill.amount}"></td>
-                                            <td th:text="${#temporals.format(bill.date, 'dd/MM/yyyy HH:mm')}"></td>
-                                            <td th:text="${bill.status}"></td>
+                                            <td class="align-middle pr-3">
+                                                <div class="dropdown">
+                                                    <a href="#" data-bs-toggle="dropdown">
+                                                        <i class="row-menu" data-feather="more-vertical"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" th:href="@{/billing/edit(billId=${bill.getBillId()})}">Edit</a>
+                                                        <a class="dropdown-item" th:href="@{/billing/delete(billId=${bill.billId})}" onclick="return confirm('Are you sure you want to delete this bill?');">Delete</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle" th:text="${bill.billId}"></td>
+                                            <td class="align-middle" th:text="${bill.appointment.appointmentId}"></td>
+                                            <td class="align-middle" th:text="${bill.amount}"></td>
+                                            <td class="align-middle" th:text="${#temporals.format(bill.getDate(), 'dd/MM/yyyy')}"></td>
+                                            <td>
+                                                <div class="dropdown ">
+                                                    <a href="#" class="dropdown-toggle row-menu" data-bs-toggle="dropdown" aria-expanded="false" th:text="${bill.getStatusDisplay()}"></a>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <li th:each="status : ${billStatuses}">
+                                                            <a class="dropdown-item row-menu" th:href="@{/billing/change-status/{id}/{status}(id=${bill.billId}, status=${status})}" th:text="${status == 'NA' ? 'N/A' : status}"></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <a href="#" class="btn btn-primary see-more-btn">View All</a>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4 col-lg-3 mb-4">
-                        <div class="card action-card d-flex flex-row align-items-center mb-2 p-2">
-                            <div class="icon-container me-3">
-                                <i data-feather="calendar"></i>
-                            </div>
-                            <div class="card-content flex-grow-1">
-                                <p class="card-title mb-0">New Bill</p>
-                                <p class="card-subtitle mb-0">Document billing info</p>
-                            </div>
-                            <i data-feather="arrow-right" class="ms-auto"></i>
                         </div>
                     </div>
 
@@ -96,13 +145,10 @@
 
     </div>
 </div>
-<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>-->
-<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{js/billing.js}"></script>
 <script th:src="@{js/main.js}"></script>
+<script th:src="@{js/billing.js}"></script>
 
 </body>
 </html>

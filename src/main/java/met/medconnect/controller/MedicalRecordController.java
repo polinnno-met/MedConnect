@@ -1,18 +1,21 @@
 package met.medconnect.controller;
 
+import met.medconnect.model.Appointment;
 import met.medconnect.model.MedicalRecord;
 import met.medconnect.model.User;
+import met.medconnect.repo.AppointmentRepository;
 import met.medconnect.repo.MedicalRecordRepository;
 import met.medconnect.repo.UserRepository;
+import met.medconnect.service.AppointmentService;
+import met.medconnect.service.MedicalRecordService;
+import met.medconnect.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -20,16 +23,24 @@ import java.util.List;
 public class MedicalRecordController {
 
     @Autowired
+    private MedicalRecordService medicalRecordService;
+
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @Autowired
     private MedicalRecordRepository medicalRecordRepository;
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping
-    public String getMedicalRecords(Authentication authentication, Model model) throws SQLException {
-        String staffId = (String) authentication.getPrincipal();
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.findAllOrderByAppointmentDateAsc();
-        User user = userRepository.findById(staffId);
+    public String getMedicalRecords(Authentication authentication, Model model) {
+        User user = userService.getCurrentUser(authentication);
+        List<MedicalRecord> medicalRecords = medicalRecordService.getAccessibleMedicalRecords(user);
 
         model.addAttribute("medicalRecords", medicalRecords);
         model.addAttribute("userInfo", user);
@@ -38,28 +49,61 @@ public class MedicalRecordController {
         return "medical-records";
     }
 
-    @GetMapping("/edit/{recordId}")
-    public String editMedicalRecord(@PathVariable Long recordId, Model model) throws SQLException {
-        MedicalRecord medicalRecord = medicalRecordRepository.findById(recordId).orElse(null);
+    @GetMapping("/edit")
+    public String editMedicalRecord(@RequestParam(value = "recordId", required = false) Long recordId, Authentication authentication, Model model) {
+        User user = userService.getCurrentUser(authentication);
+        MedicalRecord medicalRecord = (recordId != null) ? medicalRecordRepository.findById(recordId).orElse(null) : null;
+
+        if (medicalRecord != null && !medicalRecordService.canAccessMedicalRecord(user, medicalRecord)) {
+            return "redirect:/access-denied";
+        }
+
+        List<MedicalRecord> allMedicalRecords = medicalRecordService.getAccessibleMedicalRecords(user);
+        model.addAttribute("allMedicalRecords", allMedicalRecords);
         model.addAttribute("medicalRecord", medicalRecord);
-        return "edit-record";
+        model.addAttribute("userInfo", user);
+        model.addAttribute("pageName", "Edit Medical Record");
+
+        return "manage/manage-medical-record";
     }
 
-    @GetMapping("/add/{recordId}")
-    public String addMedicalRecord(@PathVariable Long recordId, Model model) {
-        // Implement the logic for adding a medical record
-        return "add-record";
+    @PostMapping("/save")
+    public String saveMedicalRecord(MedicalRecord medicalRecord) {
+        medicalRecordRepository.save(medicalRecord);
+        return "redirect:/medical-records";
     }
 
-    @GetMapping("/change-status/{recordId}")
-    public String changeStatus(@PathVariable Long recordId, Model model) {
-        // Implement the logic for changing the status
-        return "change-status";
+    @GetMapping("/add")
+    public String addMedicalRecord(Authentication authentication, Model model) {
+        User user = userService.getCurrentUser(authentication);
+        MedicalRecord medicalRecord = new MedicalRecord();
+        List<Appointment> accessibleAppointments = appointmentService.getAccessibleAppointmentsWithoutMedicalRecords(user);
+
+        if (!"DOCTOR".equals(user.getStaffRole())) {
+            List<User> allDoctors = userRepository.findByStaffRole("DOCTOR");
+            model.addAttribute("allDoctors", allDoctors);
+        }
+
+        model.addAttribute("medicalRecord", medicalRecord);
+        model.addAttribute("accessibleAppointments", accessibleAppointments);
+        model.addAttribute("userInfo", user);
+        model.addAttribute("pageName", "Add Medical Record");
+
+        return "manage/manage-medical-record";
+    }
+    @GetMapping("/delete")
+    public String deleteMedicalRecord(@RequestParam(value = "recordId", required = false) Long recordId, Authentication authentication, RedirectAttributes redirectAttributes) {
+        User user = userService.getCurrentUser(authentication);
+        MedicalRecord medicalRecord = medicalRecordService.findById(recordId);
+
+        if (medicalRecord != null && medicalRecordService.canAccessMedicalRecord(user, medicalRecord)) {
+            medicalRecordService.deleteMedicalRecord(medicalRecord);
+            redirectAttributes.addFlashAttribute("message", "Medical record deleted successfully.");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "You do not have permission to delete this medical record.");
+        }
+
+        return "redirect:/medical-records";
     }
 
-    @GetMapping("/reschedule/{recordId}")
-    public String reschedule(@PathVariable Long recordId, Model model) {
-        // Implement the logic for rescheduling
-        return "reschedule";
-    }
 }

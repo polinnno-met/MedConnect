@@ -19,13 +19,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-//    public User getUserByEmail(String email) {
-//        return userRepository.findByEmail(email);
-//    }
-//
-//    public User getUserById(String id) {
-//        return userRepository.findById(id);
-//    }
 
     public String getRoleFromAuthentication(Authentication authentication) {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -33,5 +26,11 @@ public class UserService {
             return authorities.iterator().next().getAuthority().replace("ROLE_", "");
         }
         return null;
+    }
+
+    public User getCurrentUser(Authentication authentication) {
+        String staffId = (String) authentication.getPrincipal();
+
+        return userRepository.findById(staffId);
     }
 }

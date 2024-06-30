@@ -16,7 +16,6 @@ document.getElementById('sidebarToggle').addEventListener('click', function() {
     var patientsCard = document.getElementById('patientsCard');
     var patientsCardHeight = patientsCard.offsetHeight;
 
-    calendar.setOption('height', patientsCardHeight - 10);
 });
 
 
@@ -55,26 +54,6 @@ function goToDashboard() {
     }
 }
 
-function goToPatients() {
-    var idToken = localStorage.getItem('idToken');
-    if (idToken) {
-        fetch('/patients', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + idToken
-            }
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.text();
-        }).then(html => {
-            document.write(html);
-        }).catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-            alert('Failed to fetch patients data');
-        });
-    } else {
-        alert('User not authenticated. Please log in first.');
-    }
-}
+
+
+$('.select2').select2();
